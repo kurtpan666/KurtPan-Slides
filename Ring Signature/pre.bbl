@@ -1,0 +1,811 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.1 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated as
+% required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+\datalist[entry]{none/global//global/global}
+  \entry{Micciancio2003StatisticalZP}{inproceedings}{}
+    \name{author}{2}{}{%
+      {{hash=MD}{%
+         family={Micciancio},
+         familyi={M\bibinitperiod},
+         given={Daniele},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=VS}{%
+         family={Vadhan},
+         familyi={V\bibinitperiod},
+         given={S.},
+         giveni={S\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{MDVS1}
+    \strng{fullhash}{MDVS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{CRYPTO}
+    \field{title}{Statistical Zero-Knowledge Proofs with Efficient Provers:
+  Lattice Problems and More}
+    \field{year}{2003}
+  \endentry
+
+  \entry{Lyubashevsky2011LatticeSW}{inproceedings}{}
+    \name{author}{1}{}{%
+      {{hash=LV}{%
+         family={Lyubashevsky},
+         familyi={L\bibinitperiod},
+         given={Vadim},
+         giveni={V\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{LV1}
+    \strng{fullhash}{LV1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{IACR Cryptol. ePrint Arch.}
+    \field{title}{Lattice Signatures Without Trapdoors}
+    \field{year}{2011}
+  \endentry
+
+  \entry{Cramer1994ProofsOP}{inproceedings}{}
+    \name{author}{3}{}{%
+      {{hash=CR}{%
+         family={Cramer},
+         familyi={C\bibinitperiod},
+         given={R.},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=DI}{%
+         family={Damg{\aa}rd},
+         familyi={D\bibinitperiod},
+         given={I.},
+         giveni={I\bibinitperiod},
+      }}%
+      {{hash=SB}{%
+         family={Schoenmakers},
+         familyi={S\bibinitperiod},
+         given={Berry},
+         giveni={B\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{CRDISB1}
+    \strng{fullhash}{CRDISB1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{CRYPTO}
+    \field{title}{Proofs of Partial Knowledge and Simplified Design of Witness
+  Hiding Protocols}
+    \field{year}{1994}
+  \endentry
+
+  \entry{Melchor2013AdaptingLS}{inproceedings}{}
+    \name{author}{5}{}{%
+      {{hash=MCA}{%
+         family={Melchor},
+         familyi={M\bibinitperiod},
+         given={C.\bibnamedelima A.},
+         giveni={C\bibinitperiod\bibinitdelim A\bibinitperiod},
+      }}%
+      {{hash=BS}{%
+         family={Bettaieb},
+         familyi={B\bibinitperiod},
+         given={Slim},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=BX}{%
+         family={Boyen},
+         familyi={B\bibinitperiod},
+         given={Xavier},
+         giveni={X\bibinitperiod},
+      }}%
+      {{hash=FL}{%
+         family={Fousse},
+         familyi={F\bibinitperiod},
+         given={Laurent},
+         giveni={L\bibinitperiod},
+      }}%
+      {{hash=GP}{%
+         family={Gaborit},
+         familyi={G\bibinitperiod},
+         given={P.},
+         giveni={P\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{MCA+1}
+    \strng{fullhash}{MCABSBXFLGP1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{AFRICACRYPT}
+    \field{title}{Adapting Lyubashevsky's Signature Schemes to the Ring
+  Signature Setting}
+    \field{year}{2013}
+  \endentry
+
+  \entry{Baum2018TowardsPL}{inproceedings}{}
+    \name{author}{3}{}{%
+      {{hash=BC}{%
+         family={Baum},
+         familyi={B\bibinitperiod},
+         given={Carsten},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=LH}{%
+         family={Lin},
+         familyi={L\bibinitperiod},
+         given={H.},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=OS}{%
+         family={Oechsner},
+         familyi={O\bibinitperiod},
+         given={Sabine},
+         giveni={S\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{BCLHOS1}
+    \strng{fullhash}{BCLHOS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{IACR Cryptol. ePrint Arch.}
+    \field{title}{Towards Practical Lattice-Based One-Time Linkable Ring
+  Signatures}
+    \field{year}{2018}
+  \endentry
+
+  \entry{Torres2018PostQuantumOL}{article}{}
+    \name{author}{8}{}{%
+      {{hash=TWAA}{%
+         family={Torres},
+         familyi={T\bibinitperiod},
+         given={Wilson Abel\bibnamedelima Alberto},
+         giveni={W\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim
+  A\bibinitperiod},
+      }}%
+      {{hash=SR}{%
+         family={Steinfeld},
+         familyi={S\bibinitperiod},
+         given={Ron},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=SA}{%
+         family={Sakzad},
+         familyi={S\bibinitperiod},
+         given={A.},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=LJK}{%
+         family={Liu},
+         familyi={L\bibinitperiod},
+         given={Joseph\bibnamedelima K.},
+         giveni={J\bibinitperiod\bibinitdelim K\bibinitperiod},
+      }}%
+      {{hash=KV}{%
+         family={Kuchta},
+         familyi={K\bibinitperiod},
+         given={V.},
+         giveni={V\bibinitperiod},
+      }}%
+      {{hash=BN}{%
+         family={Bhattacharjee},
+         familyi={B\bibinitperiod},
+         given={N.},
+         giveni={N\bibinitperiod},
+      }}%
+      {{hash=AM}{%
+         family={Au},
+         familyi={A\bibinitperiod},
+         given={M.},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=CJ}{%
+         family={Cheng},
+         familyi={C\bibinitperiod},
+         given={Jacob},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{TWAA+1}
+    \strng{fullhash}{TWAASRSALJKKVBNAMCJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{pages}{379}
+    \field{title}{Post-Quantum One-Time Linkable Ring Signature and Application
+  to Ring Confidential Transactions in Blockchain (Lattice RingCT v1.0)}
+    \field{volume}{2018}
+    \field{journaltitle}{IACR Cryptol. ePrint Arch.}
+    \field{year}{2018}
+  \endentry
+
+  \entry{Groth2014OneOutofManyPO}{article}{}
+    \name{author}{2}{}{%
+      {{hash=GJ}{%
+         family={Groth},
+         familyi={G\bibinitperiod},
+         given={Jens},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=KM}{%
+         family={Kohlweiss},
+         familyi={K\bibinitperiod},
+         given={Markulf},
+         giveni={M\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{GJKM1}
+    \strng{fullhash}{GJKM1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{pages}{764}
+    \field{title}{One-Out-of-Many Proofs: Or How to Leak a Secret and Spend a
+  Coin}
+    \field{volume}{2014}
+    \field{journaltitle}{IACR Cryptol. ePrint Arch.}
+    \field{year}{2014}
+  \endentry
+
+  \entry{Esgin2018ShortLO}{inproceedings}{}
+    \name{author}{5}{}{%
+      {{hash=EMF}{%
+         family={Esgin},
+         familyi={E\bibinitperiod},
+         given={Muhammed\bibnamedelima F.},
+         giveni={M\bibinitperiod\bibinitdelim F\bibinitperiod},
+      }}%
+      {{hash=SR}{%
+         family={Steinfeld},
+         familyi={S\bibinitperiod},
+         given={Ron},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=SA}{%
+         family={Sakzad},
+         familyi={S\bibinitperiod},
+         given={A.},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=LJK}{%
+         family={Liu},
+         familyi={L\bibinitperiod},
+         given={Joseph\bibnamedelima K.},
+         giveni={J\bibinitperiod\bibinitdelim K\bibinitperiod},
+      }}%
+      {{hash=LD}{%
+         family={Liu},
+         familyi={L\bibinitperiod},
+         given={D.},
+         giveni={D\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{EMF+1}
+    \strng{fullhash}{EMFSRSALJKLD1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{IACR Cryptol. ePrint Arch.}
+    \field{title}{Short Lattice-based One-out-of-Many Proofs and Applications
+  to Ring Signatures}
+    \field{year}{2018}
+  \endentry
+
+  \entry{Esgin2019LatticebasedZP}{inproceedings}{}
+    \name{author}{4}{}{%
+      {{hash=EMF}{%
+         family={Esgin},
+         familyi={E\bibinitperiod},
+         given={Muhammed\bibnamedelima F.},
+         giveni={M\bibinitperiod\bibinitdelim F\bibinitperiod},
+      }}%
+      {{hash=SR}{%
+         family={Steinfeld},
+         familyi={S\bibinitperiod},
+         given={Ron},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=LJK}{%
+         family={Liu},
+         familyi={L\bibinitperiod},
+         given={Joseph\bibnamedelima K.},
+         giveni={J\bibinitperiod\bibinitdelim K\bibinitperiod},
+      }}%
+      {{hash=LD}{%
+         family={Liu},
+         familyi={L\bibinitperiod},
+         given={D.},
+         giveni={D\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{EMF+1}
+    \strng{fullhash}{EMFSRLJKLD1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{IACR Cryptol. ePrint Arch.}
+    \field{title}{Lattice-based Zero-Knowledge Proofs: New Techniques for
+  Shorter and Faster Constructions and Applications}
+    \field{year}{2019}
+  \endentry
+
+  \entry{Stern1996ANP}{article}{}
+    \name{author}{1}{}{%
+      {{hash=SJ}{%
+         family={Stern},
+         familyi={S\bibinitperiod},
+         given={J.},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{SJ1}
+    \strng{fullhash}{SJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{pages}{1757\bibrangedash 1768}
+    \field{title}{A new paradigm for public key identification}
+    \field{volume}{42}
+    \field{journaltitle}{IEEE Trans. Inf. Theory}
+    \field{year}{1996}
+  \endentry
+
+  \entry{Kawachi2008ConcurrentlySI}{inproceedings}{}
+    \name{author}{3}{}{%
+      {{hash=KA}{%
+         family={Kawachi},
+         familyi={K\bibinitperiod},
+         given={A.},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=TK}{%
+         family={Tanaka},
+         familyi={T\bibinitperiod},
+         given={Keisuke},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=XK}{%
+         family={Xagawa},
+         familyi={X\bibinitperiod},
+         given={Keita},
+         giveni={K\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{KATKXK1}
+    \strng{fullhash}{KATKXK1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{ASIACRYPT}
+    \field{title}{Concurrently Secure Identification Schemes Based on the
+  Worst-Case Hardness of Lattice Problems}
+    \field{year}{2008}
+  \endentry
+
+  \entry{Ling2013ImprovedZP}{inproceedings}{}
+    \name{author}{4}{}{%
+      {{hash=LS}{%
+         family={Ling},
+         familyi={L\bibinitperiod},
+         given={S.},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=NK}{%
+         family={Nguyen},
+         familyi={N\bibinitperiod},
+         given={Khoa},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=SD}{%
+         family={Stehl{\'e}},
+         familyi={S\bibinitperiod},
+         given={D.},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=WH}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Huaxiong},
+         giveni={H\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{LS+1}
+    \strng{fullhash}{LSNKSDWH1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{Public Key Cryptography}
+    \field{title}{Improved Zero-Knowledge Proofs of Knowledge for the ISIS
+  Problem, and Applications}
+    \field{year}{2013}
+  \endentry
+
+  \entry{Libert2016ZeroKnowledgeAF}{inproceedings}{}
+    \name{author}{4}{}{%
+      {{hash=LB}{%
+         family={Libert},
+         familyi={L\bibinitperiod},
+         given={Beno{\^i}t},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=LS}{%
+         family={Ling},
+         familyi={L\bibinitperiod},
+         given={S.},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=NK}{%
+         family={Nguyen},
+         familyi={N\bibinitperiod},
+         given={Khoa},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=WH}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Huaxiong},
+         giveni={H\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{LB+1}
+    \strng{fullhash}{LBLSNKWH1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{EUROCRYPT}
+    \field{title}{Zero-Knowledge Arguments for Lattice-Based Accumulators:
+  Logarithmic-Size Ring Signatures and Group Signatures Without Trapdoors}
+    \field{year}{2016}
+  \endentry
+
+  \entry{Yang2017LatticeBasedTF}{article}{}
+    \name{author}{5}{}{%
+      {{hash=YR}{%
+         family={Yang},
+         familyi={Y\bibinitperiod},
+         given={R.},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=AM}{%
+         family={Au},
+         familyi={A\bibinitperiod},
+         given={M.},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=LJ}{%
+         family={Lai},
+         familyi={L\bibinitperiod},
+         given={Junzuo},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=XQ}{%
+         family={Xu},
+         familyi={X\bibinitperiod},
+         given={Qiuliang},
+         giveni={Q\bibinitperiod},
+      }}%
+      {{hash=YZ}{%
+         family={Yu},
+         familyi={Y\bibinitperiod},
+         given={Zuoxia},
+         giveni={Z\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{YR+1}
+    \strng{fullhash}{YRAMLJXQYZ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{pages}{781}
+    \field{title}{Lattice-Based Techniques for Accountable Anonymity:
+  Composition of Abstract Stern's Protocols and Weak PRF with Efficient
+  Protocols from LWR}
+    \field{volume}{2017}
+    \field{journaltitle}{IACR Cryptol. ePrint Arch.}
+    \field{year}{2017}
+  \endentry
+
+  \entry{Feng2020TraceableRS}{inproceedings}{}
+    \name{author}{4}{}{%
+      {{hash=FH}{%
+         family={Feng},
+         familyi={F\bibinitperiod},
+         given={Hanwen},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=LJ}{%
+         family={Liu},
+         familyi={L\bibinitperiod},
+         given={Jianwei},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=WQ}{%
+         family={Wu},
+         familyi={W\bibinitperiod},
+         given={Qianhong},
+         giveni={Q\bibinitperiod},
+      }}%
+      {{hash=LYN}{%
+         family={Li},
+         familyi={L\bibinitperiod},
+         given={Ya-Nan},
+         giveni={Y\bibinithyphendelim N\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{FH+1}
+    \strng{fullhash}{FHLJWQLYN1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{CT-RSA}
+    \field{title}{Traceable Ring Signatures with Post-quantum Security}
+    \field{year}{2020}
+  \endentry
+
+  \entry{Yang2019EfficientLZ}{inproceedings}{}
+    \name{author}{6}{}{%
+      {{hash=YR}{%
+         family={Yang},
+         familyi={Y\bibinitperiod},
+         given={R.},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=AM}{%
+         family={Au},
+         familyi={A\bibinitperiod},
+         given={M.},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=ZZ}{%
+         family={Zhang},
+         familyi={Z\bibinitperiod},
+         given={Zhenfei},
+         giveni={Z\bibinitperiod},
+      }}%
+      {{hash=XQ}{%
+         family={Xu},
+         familyi={X\bibinitperiod},
+         given={Qiuliang},
+         giveni={Q\bibinitperiod},
+      }}%
+      {{hash=YZ}{%
+         family={Yu},
+         familyi={Y\bibinitperiod},
+         given={Zuoxia},
+         giveni={Z\bibinitperiod},
+      }}%
+      {{hash=WW}{%
+         family={Whyte},
+         familyi={W\bibinitperiod},
+         given={William},
+         giveni={W\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{YR+1}
+    \strng{fullhash}{YRAMZZXQYZWW1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{IACR Cryptol. ePrint Arch.}
+    \field{title}{Efficient Lattice-Based Zero-Knowledge Arguments with
+  Standard Soundness: Construction and Applications}
+    \field{year}{2019}
+  \endentry
+
+  \entry{Lu2018RaptorAP}{article}{}
+    \name{author}{3}{}{%
+      {{hash=LX}{%
+         family={Lu},
+         familyi={L\bibinitperiod},
+         given={Xingye},
+         giveni={X\bibinitperiod},
+      }}%
+      {{hash=AM}{%
+         family={Au},
+         familyi={A\bibinitperiod},
+         given={M.},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=ZZ}{%
+         family={Zhang},
+         familyi={Z\bibinitperiod},
+         given={Zhenfei},
+         giveni={Z\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{LXAMZZ1}
+    \strng{fullhash}{LXAMZZ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{pages}{857}
+    \field{title}{Raptor: A Practical Lattice-Based (Linkable) Ring Signature}
+    \field{volume}{2018}
+    \field{journaltitle}{IACR Cryptol. ePrint Arch.}
+    \field{year}{2018}
+  \endentry
+
+  \entry{Wang2019AddingLT}{inproceedings}{}
+    \name{author}{3}{}{%
+      {{hash=WX}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Xueli},
+         giveni={X\bibinitperiod},
+      }}%
+      {{hash=CY}{%
+         family={Chen},
+         familyi={C\bibinitperiod},
+         given={Y.},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=MX}{%
+         family={Ma},
+         familyi={M\bibinitperiod},
+         given={Xuecheng},
+         giveni={X\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{WXCYMX1}
+    \strng{fullhash}{WXCYMX1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{ISC}
+    \field{title}{Adding Linkability to Ring Signatures with One-Time
+  Signatures}
+    \field{year}{2019}
+  \endentry
+
+  \entry{Brakerski2010AFF}{article}{}
+    \name{author}{2}{}{%
+      {{hash=BZ}{%
+         family={Brakerski},
+         familyi={B\bibinitperiod},
+         given={Zvika},
+         giveni={Z\bibinitperiod},
+      }}%
+      {{hash=KY}{%
+         family={Kalai},
+         familyi={K\bibinitperiod},
+         given={Y.},
+         giveni={Y\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{BZKY1}
+    \strng{fullhash}{BZKY1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{pages}{86}
+    \field{title}{A Framework for Efficient Signatures, Ring Signatures and
+  Identity Based Encryption in the Standard Model}
+    \field{volume}{2010}
+    \field{journaltitle}{IACR Cryptol. ePrint Arch.}
+    \field{year}{2010}
+  \endentry
+
+  \entry{Groth2008EfficientNP}{inproceedings}{}
+    \name{author}{2}{}{%
+      {{hash=GJ}{%
+         family={Groth},
+         familyi={G\bibinitperiod},
+         given={Jens},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=SA}{%
+         family={Sahai},
+         familyi={S\bibinitperiod},
+         given={A.},
+         giveni={A\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{GJSA1}
+    \strng{fullhash}{GJSA1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{EUROCRYPT}
+    \field{title}{Efficient Non-interactive Proof Systems for Bilinear Groups}
+    \field{year}{2008}
+  \endentry
+
+  \entry{Feige1990MultipleNZ}{article}{}
+    \name{author}{3}{}{%
+      {{hash=FU}{%
+         family={Feige},
+         familyi={F\bibinitperiod},
+         given={U.},
+         giveni={U\bibinitperiod},
+      }}%
+      {{hash=LD}{%
+         family={Lapidot},
+         familyi={L\bibinitperiod},
+         given={D.},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=SA}{%
+         family={Shamir},
+         familyi={S\bibinitperiod},
+         given={A.},
+         giveni={A\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{FULDSA1}
+    \strng{fullhash}{FULDSA1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{pages}{308\bibrangedash 317 vol.1}
+    \field{title}{Multiple non-interactive zero knowledge proofs based on a
+  single random string}
+    \field{journaltitle}{Proceedings [1990] 31st Annual Symposium on
+  Foundations of Computer Science}
+    \field{year}{1990}
+  \endentry
+
+  \entry{Peikert2019NoninteractiveZK}{article}{}
+    \name{author}{2}{}{%
+      {{hash=PC}{%
+         family={Peikert},
+         familyi={P\bibinitperiod},
+         given={Chris},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=SS}{%
+         family={Shiehian},
+         familyi={S\bibinitperiod},
+         given={Sina},
+         giveni={S\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{PCSS1}
+    \strng{fullhash}{PCSS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{pages}{158}
+    \field{title}{Noninteractive Zero Knowledge for NP from (Plain) Learning
+  With Errors}
+    \field{volume}{2019}
+    \field{journaltitle}{IACR Cryptol. ePrint Arch.}
+    \field{year}{2019}
+  \endentry
+
+  \entry{Badrinarayanan2019StatisticalZA}{inproceedings}{}
+    \name{author}{5}{}{%
+      {{hash=BS}{%
+         family={Badrinarayanan},
+         familyi={B\bibinitperiod},
+         given={S.},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=FR}{%
+         family={Fernando},
+         familyi={F\bibinitperiod},
+         given={R.},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=JA}{%
+         family={Jain},
+         familyi={J\bibinitperiod},
+         given={Aayush},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=KD}{%
+         family={Khurana},
+         familyi={K\bibinitperiod},
+         given={Dakshita},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=SA}{%
+         family={Sahai},
+         familyi={S\bibinitperiod},
+         given={A.},
+         giveni={A\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{BS+1}
+    \strng{fullhash}{BSFRJAKDSA1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{IACR Cryptol. ePrint Arch.}
+    \field{title}{Statistical ZAP Arguments}
+    \field{year}{2019}
+  \endentry
+\enddatalist
+\endinput

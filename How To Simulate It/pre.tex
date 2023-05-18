@@ -1,0 +1,1427 @@
+\documentclass{beamer}
+
+%\usepackage{fontspec}
+%\usepackage{xeCJK}
+
+\usetheme{Madrid}
+
+\usepackage{tikz}
+
+
+\title{How To Simulate It}
+\subtitle{A Tutorial on the Simulation Proof Technique}
+
+\author{Kurt Pan}
+\institute[]{Fudan University}
+\date{\today}
+\logo{\includegraphics[height=1cm]{800px-Fudan_University_Logo}}
+
+\begin{document}
+    \begin{frame}
+        
+        \titlepage
+    
+    \end{frame}
+
+
+    \begin{frame}
+        \frametitle{Outline}
+        \tableofcontents[sections={1-3}]
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Outline}
+        \tableofcontents[sections={4-8}]
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{}
+    
+        \begin{figure}
+            \includegraphics[scale=0.2]{training-simulation.png}
+            
+        \end{figure}
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{}
+    
+        \begin{figure}
+            \includegraphics[scale=0.3]{imitation.jpeg}
+            
+        \end{figure}
+    
+    \end{frame}
+
+    \section{Semantic Security as Simulation}
+    \sectionpage
+    \begin{frame}
+        \frametitle{Semantic Security as Simulation}
+        
+        \begin{definition}[Semantically Secure]
+            A private-key encryption scheme $(G, E, D)$ is \emph{semantically secure} (in the private-key model) if for every non-uniform probabilistic-polynomial time algorithm $\mathcal{A}$ there exists a non-uniform probabilistic-polynomial time algorithm $\mathcal{A}^{\prime}$ such that for every probability ensemble $\left\{X_{n}\right\}_{n \in \mathbb{N}}$ with $\left|X_{n}\right| \leq \operatorname{poly}(n)$, every pair of polynomially-bounded functions $f, h:$ $\{0,1\}^{*} \rightarrow\{0,1\}^{*}$, every positive polynomial $p(\cdot)$ and all sufficiently large $n:$
+            $$
+            \begin{aligned}
+            \operatorname{Pr}_{k \leftarrow G\left(1^{n}\right)}\left[\mathcal{A}\left(1^{n}, E_{k}\left(X_{n}\right), 1^{\left|X_{n}\right|}, h\left(1^{n}, X_{n}\right)\right)=f\left(1^{n}, X_{n}\right)\right] \\
+            <\operatorname{Pr}\left[\mathcal{A}^{\prime}\left(1^{n}, 1^{\left|X_{n}\right|}, h\left(1^{n}, X_{n}\right)\right)=f\left(1^{n}, X_{n}\right)\right]+\frac{1}{p(n)}
+            \end{aligned}
+            $$
+            (The probability in the above terms is taken over $X_{n}$ as well as over the internal coin tosses of the algorithms $G, E$ and $\mathcal{A}$ or $\left.\mathcal{A}^{\prime} .\right)$
+        \end{definition}
+    
+    \end{frame}
+    \begin{frame}
+        \frametitle{Semantic Security as Simulation}
+        \begin{block}{Simulation(ideal/real world comparison)}
+            Simulation is a way of comparing what happens in the “real world” to what happens in an “ideal world” where the primitive in question is secure by definition.
+        \end{block}
+    
+        Simulator $\mathcal{A}^{\prime}:$ Upon input $1^{n}, 1^{\left|X_{n}\right|}, h=h\left(1^{n}, X_{n}\right)$, algorithm $\mathcal{A}^{\prime}$ works as follows
+        \begin{enumerate}
+            \item $\mathcal{A}^{\prime}$ runs the key generation algorithm $G\left(1^{n}\right)$ in order to receive $k$ .
+            \item $\mathcal{A}^{\prime}$ computes $c=E_{k}\left(0^{\left|X_{n}\right|}\right)$ as an encryption of "garbage" .
+            \item $\mathcal{A}^{\prime}$ runs $\mathcal{A}\left(1^{n}, c, 1^{\left|X_{n}\right|}, h\right)$ and outputs whatever $\mathcal{A}$ outputs.
+        \end{enumerate}
+        
+
+        \begin{block}{Simulation-based proofs}
+            The simulator somehow simulates an execution for the adversary while handing it “garbage” that looks indistinguishable. Then, the proof proceeds by showing that the simulation is “good”, or else the given assumption can be broken.
+        \end{block}
+            
+        
+    
+    \end{frame}
+    \section{Simulation for Semi-Honest Adversaries}
+    \sectionpage
+    \begin{frame}
+        \frametitle{Defining Security for Semi-Honest Adversaries}
+        \begin{itemize}
+            \item Let $f=\left(f_{1}, f_{2}\right)$ be a probabilistic polynomial-time \emph{functionality} and let $\pi$ be a two-party protocol for computing $f$. 
+            \item The \emph{view} of the $i$ th party $(i \in\{1,2\})$ during an execution of $\pi$ on $(x, y)$ and security parameter $n$ is denoted by $\mathsf{view}_{i}^{\pi}(x, y, n)$ and equals $\left(w, r^{i} ; m_{1}^{i}, \ldots, m_{t}^{i}\right)$, where $w \in\{x, y\}$ (its input depending on the value of $i), r^{i}$ equals the contents of the $i$ th party's internal random tape, and $m_{j}^{i}$ represents the $j$ th message that it received.
+            \item The \emph{output} of the $i$ th party during an execution of $\pi$ on $(x, y)$ and security parameter $n$ is denoted by $\mathsf{output}_{i}^{\pi}(x, y, n)$ and can be computed from its own view of the execution. We denote the joint output of both parties by $\mathsf{output}^{\pi}(x, y, n)=\left(\right.\mathsf{output}_{1}^{\pi}(x, y, n), \mathsf{output} \left._{2}^{\pi}(x, y, n)\right)$.
+
+    
+        \end{itemize}
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Defining Security for Semi-Honest Adversaries}
+        \begin{definition}[$\pi$ securely computes $f$ in the presence of static semi-honest adversaries]
+
+            if there exist probabilistic polynomial-time algorithms $\mathcal{S}_{1}$ and $\mathcal{S}_{2}$ such that
+            $$
+            \begin{array}{l}
+            \left\{\left(\mathcal{S}_{1}\left(1^{n}, x, f_{1}(x, y)\right), f(x, y)\right)\right\}_{x, y, n} \stackrel{\mathrm{c}}{\equiv}\left\{\left(\mathsf{view}_{1}^{\pi}(x, y, n), \mathsf{output}^{\pi}(x, y, n)\right)\right\}_{x, y, n}  \\
+            \left\{\left(\mathcal{S}_{2}\left(1^{n}, y, f_{2}(x, y)\right), f(x, y)\right)\right\}_{x, y, n} \stackrel{\mathrm{c}}{=}\left\{\left(\mathsf{view}_{2}^{\pi}(x, y, n), \mathsf{output}^{\pi}(x, y, n)\right)\right\}_{x, y, n}
+            \end{array}
+            $$
+            where $x, y \in\{0,1\}^{*}$ such that $|x|=|y|$, and $n \in \mathbb{N}$.
+          
+            
+        \end{definition}
+    
+        
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Defining Security for Semi-Honest Adversaries}
+
+        \begin{definition}[$\pi$ securely computes $f$ in the presence of static semi-honest adversaries($f$ is deterministic)]
+            \begin{itemize}
+                \item \textbf{Correctness}, meaning that the output of the parties is correct, i.e. there exists a negligible function $\mu$ such that for every $x, y \in\{0,1\}^{*}$ and every $n$
+                $$
+                \operatorname{Pr}\left[\mathsf{output}^{\pi}(x, y, n) \neq f(x, y)\right] \leq \mu(n),
+                $$
+                
+                \item \textbf{Privacy}, meaning that the view of each party can be (separately) simulated,i.e. there exist probabilistic-polynomial time $S_{1}$ and $S_{2}$ such that
+                $$
+                \begin{array}{l}
+                \left\{\mathcal{S}_{1}\left(1^{n}, x, f_{1}(x, y)\right)\right\}_{x, y \in\{0,1\}^{*} ; n \in \mathbb{N}} \stackrel{\mathrm{c}}{\equiv}\left\{\mathsf{view}_{1}^{\pi}(x, y, n)\right\}_{x, y \in\{0,1\}^{*} ; n \in \mathbb{N}} \\
+                \left\{\mathcal{S}_{2}\left(1^{n}, y, f_{2}(x, y)\right)\right\}_{x, y \in\{0,1\}^{*} ; n \in \mathbb{N}} \stackrel{\mathrm{c}}{\equiv}\left\{\mathsf{view}_{2}^{\pi}(x, y, n)\right\}_{x, y \in\{0,1\}^{*} ; n \in \mathbb{N}} 
+                \end{array}
+                $$
+            \end{itemize}
+
+        
+        \end{definition}
+
+    
+        
+    
+    \end{frame}
+
+    \subsection{Oblivious Transfer for Semi-Honest Adversaries}
+    \begin{frame}
+        \frametitle{Oblivious Transfer for Semi-Honest Adversaries}
+        \begin{definition}[Bit Oblivious Transfer Functionality]
+            $$
+            f\left(\left(b_{0}, b_{1}\right), \sigma\right)=\left(\lambda, b_{\sigma}\right), \text { where } b_{0}, b_{1}, \sigma \in\{0,1\}
+            $$
+            
+        \end{definition}
+
+        \begin{itemize}
+            \item $P_{1}$ has a pair of input bits $\left(b_{0}, b_{1}\right)$ and $P_{2}$ has a choice bit $\sigma .$ 
+            \item $P_{1}$ receives no output (denoted by the empty string $\lambda$ ), and in particular learns nothing about $\sigma .$ 
+            \item $P_{2}$ receives the bit of its choice $b_{\sigma}$ and learns nothing about the other bit $b_{1-\sigma} .$
+        \end{itemize}
+        
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{}
+        \begin{definition}[Enhanced Trapdoor Permutations]
+            A collection of \emph{trapdoor permutations} is a collection of functions $\left\{f_{\alpha}\right\}_{\alpha}$ accompanied by four probabilistic-polynomial time algorithms $I, S, F, F^{-1}$ such that:
+            \begin{itemize}
+                \item $I\left(1^{n}\right)$ selects a random $n$ -bit index $\alpha$ of a permutation $f_{\alpha}$ along with a corresponding trapdoor $\tau$. Denote by $I_{1}\left(1^{n}\right)$ the $\alpha$ -part of the output.
+                \item  $S(\alpha)$ samples an (almost uniform) element in the domain (equivalently, the range) of $f_{\alpha}$. We denote by $S(\alpha ; r)$ the output of $S(\alpha)$ with random tape $r ;$ for simplicity we assume that $r \in\{0,1\}^{n}$
+                \item $F(\alpha, x)=f_{\alpha}(x)$, for $\alpha$ in the range of $I_{1}$ and $x$ in the range of $S(\alpha)$.
+                \item $F^{-1}(\tau, y)=f_{\alpha}^{-1}(y)$ for $y$ in the range of $f_{\alpha}$ and $(\alpha, \tau)$ in the range of $I$.
+            \end{itemize}
+            for every non-uniform probabilistic polynomial time adversary $\mathcal{A}$ there exists a negligible function $\mu$ such that for every $n$,
+            $$
+            \operatorname{Pr}\left[\mathcal{A}\left(1^{n}, \alpha, r\right)=f_{\alpha}^{-1}(S(\alpha ; r))\right] \leq \mu(n)
+            $$
+            where $\alpha \leftarrow I_{1}\left(1^{n}\right)$ and $r \in_{R}\{0,1\}^{n}$ is random. 
+        \end{definition}
+    
+        
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{}
+    
+        \begin{definition}[Hard-core Predicate]
+            A hard-core predicate $B$ of a family of enhanced trapdoor permutations $\left(I, S, F, F^{-1}\right)$ if for every non-uniform probabilistic-polynomial time adversary $\mathcal{A}$ there exists a negligible function $\mu$ such that for every $n$,
+            $$
+            \operatorname{Pr}\left[\mathcal{A}\left(1^{n}, \alpha, r\right)=B\left(\alpha, f_{\alpha}^{-1}(S(\alpha ; r))\right)\right] \leq \frac{1}{2}+\mu(n)
+            $$
+        \end{definition}
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Oblivious Transfer for Semi-Honest Adversaries}
+        \begin{block}{Protocol}
+            \begin{enumerate}
+                \item $P_{1}$ runs $I\left(1^{n}\right)$ to obtain a permutation-trapdoor pair $(\alpha, \tau) . P_{1}$ sends $\alpha$ to $P_{2}$.
+                \item $P_{2}$ runs $S(\alpha)$ twice; denote the first value obtained by $x_{\sigma}$ and the second by $y_{1-\sigma}$. Then, $P_{2}$ computes $y_{\sigma}=F\left(\alpha, x_{\sigma}\right)=f_{\alpha}\left(x_{\sigma}\right)$, and sends $y_{0}, y_{1}$ to $P_{1}$.
+                \item $P_{1}$ uses the trapdoor $\tau$ and computes $x_{0}=F^{-1}\left(\alpha, y_{0}\right)=f_{\alpha}^{-1}\left(y_{0}\right)$ and $x_{1}=$ $F^{-1}\left(\alpha, y_{1}\right)=f_{\alpha}^{-1}\left(y_{1}\right) .$ Then, it computes $\beta_{0}=B\left(\alpha, x_{0}\right) \oplus b_{0}$ and $\beta_{1}=B\left(\alpha, x_{1}\right) \oplus b_{1}$,
+                where $B$ is a hard-core predicate of $f$. Finally, $P_{1}$ sends $\left(\beta_{0}, \beta_{1}\right)$ to $P_{2}$.
+                \item $P_{2}$ computes $b_{\sigma}=B\left(\alpha, x_{\sigma}\right) \oplus \beta_{\sigma}$ and outputs the result.
+            \end{enumerate}
+            
+        \end{block}
+  
+    \end{frame}
+    \begin{frame}
+        \frametitle{Oblivious Transfer for Semi-Honest Adversaries}
+    
+        \begin{theorem}
+            Assume that $\left(I, S, F, F^{-1}\right)$ constitutes a family of enhanced trapdoor permutations with a hard-core predicate $B.$ Then, Protocol above securely computes the functionality $f\left(\left(b_{0}, b_{1}\right), \sigma\right)=$ $\left(\lambda, b_{\sigma}\right)$ in the presence of static semi-honest adversaries.
+        \end{theorem}
+
+        \begin{proof}
+            $P_{1}$ is corrupted
+
+            $\mathcal{S}_{1}$ is given $\left(b_{0}, b_{1}\right)$ and $1^{n}$ :
+            \begin{enumerate}
+                \item $\mathcal{S}_{1}$ chooses a uniformly distributed random tape $r$ for $P_{1}$ 
+                \item $\mathcal{S}_{1}$ computes $(\alpha, \tau) \leftarrow I\left(1^{n} ; r\right)$, using the $r$ from above.
+                \item $\mathcal{S}_{1}$ runs $S(\alpha)$ twice with independent randomness to sample values $y_{0}, y_{1}$.
+                \item $\mathcal{S}_{1}$ outputs $\left(\left(b_{0}, b_{1}\right), r ;\left(y_{0}, y_{1}\right)\right)$; the pair $\left(y_{0}, y_{1}\right)$ simulates the incoming message from $P_{2}$ to $P_{1}$ in the protocol.
+            \end{enumerate}
+        \end{proof}
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{}
+    
+        \begin{block}{Claim}
+            $$
+            \left\{\left(F\left(\alpha, x_{0}\right), y_{1}\right)\right\} \stackrel{\mathrm{s}}{\equiv}\left\{\left(y_{0}, y_{1}\right)\right\} \stackrel{\mathrm{s}}{\equiv}\left\{\left(y_{0}, F\left(\alpha, x_{1}\right)\right)\right\}
+            $$
+
+            $$
+            \left\{\mathcal{S}_{1}\left(1^{n},\left(b_{0}, b_{1}\right)\right)\right\} \stackrel{\mathrm{s}}{\equiv} \left\{\operatorname{view}_{1}^{\pi}\left(\left(b_{0}, b_{1}\right), \sigma\right)\right\}
+            $$
+            
+        \end{block}
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{$P_{2}$ is corrupted}
+    
+        \begin{proof}
+            Simulator $\mathcal{S}_{2}$ receives for input $1^{n}$ plus $\left(\sigma, b_{\sigma}\right)$:
+            \begin{enumerate}
+                \item $\mathcal{S}_{2}$ chooses a uniform random tape for $P_{2}$. Since $P_{2}$ 's randomness is for running $S(\alpha)$ twice, we denote the random tape by $r_{0}, r_{1} .$
+                \item $\mathcal{S}_{2}$ runs $I\left(1^{n}\right)$ and obtains $(\alpha, \tau)$.
+                \item $\mathcal{S}_{2}$ computes $x_{\sigma}=S\left(\alpha ; r_{\sigma}\right)$ and $y_{1-\sigma}=S\left(\alpha ; r_{1-\sigma}\right)$, and sets $x_{1-\sigma}=F^{-1}\left(\tau, y_{1-\sigma}\right)$.
+                \item $\mathcal{S}_{2}$ sets $\beta_{\sigma}=B\left(\alpha, x_{\sigma}\right) \oplus b_{\sigma}$, where $b_{\sigma}$ is $P_{2}$ 's output received by $\mathcal{S}_{2}$.
+                \item $\mathcal{S}_{2}$ sets $\beta_{1-\sigma}=B\left(\alpha, x_{1-\sigma}\right)$.
+                \item $\mathcal{S}_{2}$ outputs $\left(\sigma, r_{0}, r_{1} ; \alpha,\left(\beta_{0}, \beta_{1}\right)\right)$.
+            \end{enumerate}
+        \end{proof}
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{}
+    
+        \begin{block}{Claim}
+            When $b_{1-\sigma}=0$, for every $\sigma, b_{\sigma} \in\{0,1\}$ and every $n$:
+            $$
+            \left\{\mathcal{S}_{2}\left(1^{n}, \sigma, b_{\sigma}\right)\right\} \equiv\left\{\operatorname{view}_{2}^{\pi}\left(\left(b_{0}, b_{1}\right), \sigma\right)\right\}
+            $$
+        \end{block}
+
+        \begin{block}{Claim}
+            When $b_{1-\sigma}=1$
+            $$
+            \left\{\left(\sigma, r_{0}, r_{1} ; \alpha,\left(B\left(\alpha, x_{\sigma}\right) \oplus b_{\sigma}, B\left(\alpha, x_{1-\sigma}\right)\right)\right)\right\} \stackrel{\mathrm{c}}{=}
+            $$
+            $$
+            \left\{\left(\sigma, r_{0}, r_{1} ; \alpha,\left(B\left(\alpha, x_{\sigma}\right) \oplus b_{\sigma}, B\left(\alpha, x_{1-\sigma}\right) \oplus 1\right)\right)\right\}
+            $$
+        \end{block}
+    
+    \end{frame}
+    
+        
+    \section{Simulating the View of Malicious Adversaries – Zero Knowledge}
+  
+    \subsection{Defining Zero Knowledge}
+
+    \sectionpage
+
+    \begin{frame}
+        \frametitle{Defining Zero Knowledge}
+        \begin{definition}[IP]
+            An \emph{interactive proof system} for a language $L$ involves a prover $P$ and a verifier $V$, where upon common input $x$, the prover $P$ attempts to convince $V$ that $x \in L$. The prover is often given some private auxiliary-input that "helps" it to prove the statement in question to $V$. 
+            \begin{enumerate}
+                \item  \textbf{Completeness}:  when honest $P$ and $V$ interact on common input $x \in L$, then $V$ is convinced of the correctness of the statement that $x \in L$ (except with at most negligible probability).
+                \item \textbf{Soundness}:  when $V$ interacts with any (cheating) prover $P^{*}$ on common input $x \notin L$, then $V$ will be convinced with at most negligible probability. (Thus $V$ cannot be tricked into accepting a false statement.)
+            \end{enumerate}
+        \end{definition}
+    
+        
+    
+    \end{frame}
+    \begin{frame}
+        \frametitle{Defining Zero Knowledge}
+        \begin{definition}[bb-cZK]
+            Let $(P, V)$ be an interactive proof system for an $\mathcal{N} \mathcal{P}$ -language $L$, and let $R_{L}$ be the associated $\mathcal{N} \mathcal{P}$ -relation. We say that $(P, V)$ is \emph{black-box computational zero knowledge} if there exists a probabilistic-polynomial time oracle machine $\mathcal{S}$ such that for every non-uniform probabilistic polynomial time algorithm $V^{*}$ it holds that:
+
+            $$
+            \left\{\text {output}_{V^{*}}\left(P(x, w), V^{*}(x, z)\right)\right\}_{(x, w) \in R_{L}, z \in\{0,1\}^{*}} \stackrel{\mathrm{c}}{\equiv}\left\{\mathcal{S}^{V^{*}(x, z, r, \cdot)}(x)\right\}_{x \in L, z \in\{0,1\}^{*}}
+            $$
+
+            where $r$ is uniformly distributed, and where $V^{*}(x, z, r, \cdot)$ denotes the next-message function of the interactive machine $V^{*}$ when the common input $x$, auxiliary input $z$ and random-tape $r$ are fixed (i.e., the next message function of $V^{*}$ receives a message history $\vec{m}$ and outputs $\left.V^{*}(x, z, r, \vec{m})\right)$.
+            
+        \end{definition}
+    
+        
+    
+    \end{frame}
+    \subsection{Commitment Schemes}
+    \begin{frame}
+        \frametitle{Commitment Schemes}
+        \begin{definition}
+            We denote by $\operatorname{Com}$ a \emph{non-interactive perfectly binding commitment scheme}. Let $c=\operatorname{Com}_{n}(x ; r)$ denote a commitment to $x$ using random string $r$ and with security parameter $n .$ We will typically omit the explicit reference to $n$ and will write $c=\operatorname{Com}(x ; r) .$ 
+            
+            Let $\operatorname{Com}(x)$ denote a commitment to $x$ using uniform randomness. 
+            
+            Let $\operatorname{decom}(c)$ denote the decommitment value of $c ;$ to be specific, if $c=\operatorname{Com}(x ; r)$ then $\operatorname{decom}(c)=(x, r)$.
+            \begin{itemize}
+                \item \textbf{Computational Hiding} commitments to different strings are computationally indistinguishable. For bit commitments,  $\mathcal{C}_{0} \stackrel{\mathrm{c}}{\equiv} \mathcal{C}_{1}$ where $\mathcal{C}_{b}=\left\{\operatorname{Com}\left(b ; U_{n}\right)\right\}_{n \in \mathbb{N}}$ is the ensemble of commitments to bit $b$.
+                \item \textbf{Perfect Binding} the sets of all commitments to different values are disjoint; that is, for all $x_{1} \neq x_{2}$ it holds that $C_{x_{1}} \cap C_{x_{2}}=\emptyset$ where $C_{x_{1}}=\left\{c \mid \exists r: c=\operatorname{Com}\left(x_{1} ; r\right)\right\}$
+                and $C_{x_{2}}=\left\{c \mid \exists r: c=\operatorname{Com}\left(x_{2} ; r\right)\right\}$. 
+            \end{itemize}
+        \end{definition}
+    
+        
+    
+    \end{frame}
+    \subsection{Non-Constant Round Zero Knowledge}
+    \subsectionpage
+
+    \begin{frame}
+        \frametitle{Zero-Knowledge Proof for 3-Coloring}
+    
+        \begin{itemize}
+            \item \emph{Common input}: a graph $G=(V, E)$ with $V=\left\{v_{1}, \ldots, v_{n}\right\}$
+            \item \emph{Auxiliary input for the prover}: a coloring of the graph $\psi: V \rightarrow\{1,2,3\}$ such that for every $\left(v_{i}, v_{j}\right) \in E$ it holds that $\psi\left(v_{i}\right) \neq \psi\left(v_{j}\right)$
+            \item \emph{The proof system}: Repeat the following $n \cdot|E|$ times (using independent randomness each time):
+            \begin{enumerate}
+                \item The prover selects a random permutation $\pi$ over $\{1,2,3\}$, defines $\phi(v)=\pi(\psi(v))$ for all $v \in V$, and computes $c_{i}=\operatorname{Com}\left(\phi\left(v_{i}\right)\right)$ for all $i$. The prover sends the verifier the commitments $\left(c_{1}, \ldots, c_{n}\right)$
+                \item The verifier chooses a random edge $e \in_{R} E$ and sends $e$ to the prover.
+                \item Let $e=\left(v_{i}, v_{j}\right)$ be the edge received by the prover. The prover sends $\mathsf{decom}\left(c_{i}\right), \mathsf{decom}\left(c_{j}\right)$ to the verifier.
+                \item Let $\phi\left(v_{i}\right)$ and $\phi\left(v_{j}\right)$ denote the respective decommitment values from $c_{i}$ and $c_{j} .$ The verifier checks that the decommitments are valid, that $\phi\left(v_{i}\right), \phi\left(v_{j}\right) \in\{1,2,3\}$, and that $\phi\left(v_{i}\right) \neq \phi\left(v_{j}\right)$. If not, it halts and outputs 0 .
+            \end{enumerate}
+            If the checks pass in all iterations, then the verifier outputs $1 .$
+        \end{itemize}
+        
+    
+    \end{frame}
+    \begin{frame}
+        \frametitle{}
+        \begin{itemize}
+            \item \textbf{Soundness} By repeating the proof $n \cdot|E|$ times (where $n$ is the number of nodes in the graph), the prover can get away with cheating with probability at most $\left(1-\frac{1}{|E|}\right)^{n \cdot|E|}<e^{-n}$ which is negligible. 
+            \item \textbf{Zero Knowledge} In each execution a new random coloring of the edges is committed to by the prover, and the verifier only sees the colors of a single edge. Thus, the verifier simply sees two (different) random colors for the endpoints of the edges each time. This clearly reveals nothing about the coloring of the graph. We must prove this intuition by constructing a simulator.
+        \end{itemize}
+    
+        
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Rewinding}
+    
+        \begin{columns}
+            \column{0.5\textwidth}
+            \begin{figure}
+                \includegraphics[scale=0.15]{wanda.png}
+                
+            \end{figure}
+            \column{0.5\textwidth}
+            \begin{figure}
+                \includegraphics[scale=0.2]{tenet.png}
+                
+            \end{figure}
+            \end{columns}
+
+            \begin{itemize}
+                \item game save points
+                \item virtual machine snapshot
+            \end{itemize}
+    
+    \end{frame}
+    \begin{frame}
+        \frametitle{}
+    
+        \begin{theorem}
+            Let $\mathrm{Com}$ be a perfectly-binding commitment scheme with security for non-uniform adversaries. Then, the 3-coloring protocol is bb-cZK.
+        \end{theorem}
+        \begin{proof}
+            \textbf{Simulator} $\mathcal{S}$ is given a graph $G=(V, E)$ with $V=\left\{v_{1}, \ldots, v_{n}\right\}$ and oracle access to some probabilistic-polynomial time $V^{*}(x, z, r, \cdot)$, and works as follows:
+            \begin{enumerate}
+                \item $\mathcal{S}$ initializes the message history transcript $\vec{m}$ to be the empty string $\lambda$.
+                \item Repeat $n \cdot|E|$ times:
+                \begin{enumerate}[a]
+                    \item $\mathcal{S}$ sets $j=1$.
+                    \item $\mathcal{S}$ chooses a random edge $\left(v_{k}, v_{\ell}\right) \in_{R} E$ and chooses two random different colors for $v_{k}$ and $v_{\ell}$. Formally, $\mathcal{S}$ chooses $\phi\left(v_{k}\right) \in_{R}\{1,2,3\}$ and $\phi\left(v_{\ell}\right) \in_{R}\{1,2,3\} \backslash\left\{\phi\left(v_{k}\right)\right\}$. For all
+                    other $v_{i} \in V \backslash\left\{v_{k}, v_{\ell}\right\}, \mathcal{S}$ sets $\phi\left(v_{i}\right)=0$.
+                    \item For every $i=1, \ldots, n, \mathcal{S}$ computes $c_{i}=\operatorname{Com}\left(\phi\left(v_{i}\right)\right)$.
+                \end{enumerate}
+                
+            \end{enumerate}
+        \end{proof}
+
+    
+    \end{frame}
+
+ 
+
+    \begin{frame}
+        \frametitle{}
+        \begin{proof}
+            \begin{enumerate}
+                \setcounter{enumi}{1}
+                \item 
+                
+                \begin{enumerate} [d]
+                   
+                    \item $\mathcal{S}$ "sends" the vector $\left(c_{1}, \ldots, c_{n}\right)$ to $V^{*}$. Formally, $\mathcal{S}$ queries $\vec{m}$ concatenated with this vector to its oracle (indeed $\mathcal{S}$ does not interact with $V^{*}$ and so cannot actually "send" it any message). Let $e \in E$ be the reply back from the oracle.
+                    \item If $e=\left(v_{k}, v_{\ell}\right)$, then $\mathcal{S}$ completes this iteration by concatenating the commitments $\left(c_{1}, \ldots, c_{n}\right)$ and $\left(\operatorname{decom}\left(c_{k}\right),\operatorname{decom}\left(c_{\ell}\right)\right)$ to $\vec{m} .$ Formally, $\mathcal{S}$ updates the history string $\vec{m} \leftarrow\left(\vec{m},\left(c_{1}, \ldots, c_{n}\right),\left(\operatorname{decom}\left(c_{k}\right), \operatorname{decom}\left(c_{\ell}\right)\right)\right)$ 
+                    \item  If $e \neq\left(v_{k}, v_{\ell}\right)$ then $\mathcal{S}$ sets $j \leftarrow j+1$. If $j=n \cdot|E|$, then $\mathcal{S}$ outputs a fail symbol $\perp$. Else (when $j \neq n \cdot|E|), \mathcal{S}$ returns to Step $2b$ (i.e., $\mathcal{S}$ tries again for this $i$ ). This return to Step $2b$ is the \emph{rewinding} of $V^{*}$ by the simulator.
+                \end{enumerate}
+
+                \item $\mathcal{S}$ outputs whatever $V^{*}$ outputs on the final transcript $\vec{m}$.
+            \end{enumerate}
+        \end{proof}
+        
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{}
+        \begin{itemize}
+            \item \textbf{$\mathcal{S}$ runs in polynomial-time: } each repetition runs for at most $n \cdot|E|$ iterations, and there are $n \cdot|E|$ repetitions.
+            \item To prove that $\mathcal{S}$ \textbf{generates a transcript that is indistinguishable from a real transcript}, i.e.
+            $$
+            \left\{\text { output}_{V^{*}}\left(P(G, \psi), V^{*}(G, z)\right)\right\} \stackrel{\mathrm{c}}{\equiv}\left\{\mathcal{S}^{V^{*}(G, z, r, \cdot)}(G)\right\}
+            $$
+            
+            we need to prove a reduction to the security of the commitment scheme. 
+            \item Alternative simulator $\mathcal{S}^{\prime}$ who is given a valid coloring $\psi$ as auxiliary input. 
+
+            $\mathcal{S}^{\prime}$ works in exactly the same way as $\mathcal{S}$ (choosing $e$ at random, rewinding, and so on) except that in every iteration it chooses a random permutation $\pi$ over $\{1,2,3\}$, sets $\phi(v)=\pi(\psi(v))$, and computes $c_{i}=\operatorname{Com}\left(\phi\left(v_{i}\right)\right)$ for all $i$, exactly like the real prover.
+        \end{itemize}
+    
+        
+    
+    \end{frame}
+    \begin{frame}
+        \frametitle{}
+        \begin{block}{Claim 1}
+            $$
+            \left\{\text {output}_{V^{*}}\left(P(G, \psi), V^{*}(G, z)\right)\right\} \equiv\left\{{\mathcal{S}}^{\prime V^{*}(G, z, r,)}(G, \psi) \mid \mathcal{S}^{\prime V^{*}(G, z, r, \cdot)}(G, \psi) \neq \perp\right\}
+            $$
+        \end{block}
+
+        \begin{block}{Claim 2}
+            $$
+            \left\{\mathcal{S}^{\prime V^{*}(G, z, r, \cdot)}(G, \psi) \mid \mathcal{S}^{\prime V^{*}(G, z, r, \cdot)}(G, \psi) \neq \perp\right\} \stackrel{\mathrm{c}}{\equiv}\left\{\mathcal{S}^{\prime V^{*}(G, z, r, \cdot)}(G, \psi)\right\}
+            $$
+            
+        \end{block}
+
+        \begin{block}{Claim 3}
+            $$
+            \left\{\mathcal{S}^{\prime V^{*}(G, z, r, \cdot)}(G, \psi)\right\} \stackrel{\mathrm{c}}{\equiv}\left\{\mathcal{S}^{V^{*}(G, z, r, \cdot)}(G)\right\}
+            $$
+            
+        \end{block}
+
+    
+        
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{}
+    
+        \begin{proof}
+            \begin{itemize}
+                \item             Assume by contradiction, that there exists a probabilistic-polynomial time verifier $V^{*}$, a probabilisticpolynomial time distinguisher $D$, and a polynomial $p(\cdot)$ such that for an infinite sequence $(G, \psi, z)$ where $(G, \psi) \in R$ and $z \in\{0,1\}^{*}$,
+
+                $$
+                    |\operatorname{Pr}\left[D\left(G, \psi, z,{\mathcal{S}}^{\prime V^{*}(G, z, r, \cdot)}(G, \psi)\right)=1\right]
+                $$
+                $$
+                -\operatorname{Pr}\left[D\left(G, \psi, z, \mathcal{S}^{V^{*}(G, z, r, \cdot)}(G)\right)=1\right]| \geq \frac{1}{p(n)}
+                $$
+                \item We construct a adversary $\mathcal{A}$ for the commitment experiment LR-commit. $\mathcal{A}$ receives $(G, \psi, z)$ on its advice tape.
+            \end{itemize}
+
+           
+            
+        \end{proof}
+    
+    \end{frame}
+    \begin{frame}
+        \frametitle{}
+        \begin{enumerate}
+            \item $\mathcal{A}$ initializes $V^{*}$ with input graph $G$, auxiliary input $z$ and a uniform random tape $r$
+            \item $\mathcal{A}$ runs the instructions of $\mathcal{S}^{\prime}$ with input $(G, \psi)$ and oracle $V^{*}(x, z, r ; \cdot)$, with some changes. 
+            For every iteration of the simulation:
+           \begin{enumerate}[a]
+               \item For the randomly chosen edge $e=\left(v_{k}, v_{\ell}\right)$, adversary $\mathcal{A}$ generates commitments $c_{k}=$ $\operatorname{Com}\left(\phi\left(v_{k}\right)\right)$ and $c_{\ell}=\operatorname{Com}\left(\phi\left(v_{\ell}\right)\right)$ by itself.
+               \item  For all other $i$ (i.e., for all $i \in\{1, \ldots, n\} \backslash\{k, \ell\})$, adversary $\mathcal{A}$ queries its LR-oracle with the pair $(0, \phi(i))$. Denote by $c_{i}$ the commitment received back.
+           \end{enumerate}
+           $\mathcal{A}$ simulates $\mathcal{S}^{\prime}$ querying $V^{*}$ with the commitments $\left(c_{1}, \ldots, c_{n}\right)$ as a result of the above. Observe that $\mathcal{A}$ can decommit to $v_{k}, v_{\ell}$ as needed by $\mathcal{S}^{\prime}$, since it computed the commitments itself.
+
+           \item When $\mathcal{S}^{\prime}$ concludes, then $\mathcal{A}$ invokes $D$ on the output generated by $\mathcal{S}^{\prime}$, and outputs whatever $D$ outputs.
+            
+            
+        \end{enumerate}
+        
+    
+    \end{frame}
+    \begin{frame}
+        \frametitle{}
+        \begin{proof}
+            
+
+
+$$
+\operatorname{Pr}\left[\text {LR-commit}_{\text {Com }, \mathcal{A}}\left(1^{n}\right)=1 \mid b=1\right]=\operatorname{Pr}\left[D\left(G, z,{\mathcal{S}}^{\prime V^{*}(G, z, r, \cdot)}(G, \psi)\right)=1\right]
+$$
+
+$$
+\operatorname{Pr}\left[\text {LR-commit}_{\text {Com }, \mathcal{A}}\left(1^{n}\right)=1 \mid b=0\right]=\operatorname{Pr}\left[D\left(G, z, \mathcal{S}^{V^{*}(G, z, r, \cdot)}(G)\right)=0\right]
+$$
+
+$$
+\begin{array}{l}
+\operatorname{Pr}\left[\text {LR-commit}_{\operatorname{Com}, \mathcal{A}}\left(1^{n}\right)=1\right] \\
+=\frac{1}{2}  \operatorname{Pr}\left[\text {LR-commit}_{\text {Com}, \mathcal{A}}\left(1^{n}\right)=1 \mid b=1\right]\\
++\frac{1}{2}  \operatorname{Pr}\left[\operatorname{LR-commit}_{\text {Com,} \mathcal{A}}\left(1^{n}\right)=1 \mid b=0\right] \\
+=\frac{1}{2}  \operatorname{Pr}\left[D\left(G, z,{\mathcal{S}}^{\prime V^{*}(G, z, r, \cdot)}(G, \psi)\right)=1\right]+\frac{1}{2} \operatorname{Pr}\left[D\left(G, z, \mathcal{S}^{V^{*}(G, z, r, )}(G)\right)=0\right] \\
+=\frac{1}{2}  \operatorname{Pr}\left[D\left(G, z, \mathcal{S}^{\prime V^{*}(G, z, r, \cdot)}(G, \psi)\right)=1\right]\\
++\frac{1}{2} \left(1-\operatorname{Pr}\left[D\left(G, z, \mathcal{S}^{V^{*}(G, z, r, \cdot)}(G)\right)=1\right]\right) \\
+=\frac{1}{2}+\\
+\frac{1}{2} \left(\operatorname{Pr}\left[D\left(G, z, \mathcal{S}^{\prime V^{*}(G, z, r, \cdot)}(G, \psi)\right)=1\right]-\operatorname{Pr}\left[D\left(G, z, \mathcal{S}^{V^{*}(G, z, r,)}(G)\right)=1\right]\right) \\
+\geq \frac{1}{2}+\frac{1}{2 p(n)} .
+\end{array}
+$$
+        \end{proof}
+        
+    
+    \end{frame}
+    \begin{frame}
+        \frametitle{Discussion on the proof technique}
+        \begin{itemize}
+            \item Two differences between $\mathcal{S}$ and a real prover: (a) the flow of $\mathcal{S}$ that involves choosing $e$ and rewinding, and (b) the commitments that are incorrectly generated. 
+            \item This technique is often used in simulation-based proofs, and in some cases there are \textbf{series of simulators} that bridge the differences between the real execution and the simulation. This is similar to \textbf{sequences of hybrids in game-based proofs}, with the only difference being that the sequence here is from the simulation to the real execution (or vice versa). 
+        \end{itemize}
+    
+        
+    
+    \end{frame}
+    \subsection{Constant-Round Zero-Knowledge}
+    \subsectionpage
+
+    \begin{frame}
+        \frametitle{}
+    
+        \begin{figure}
+            \includegraphics[scale=0.25]{deng.png}
+        \end{figure}
+    
+    \end{frame}
+    \begin{frame}
+        \frametitle{The Goldreich-Kahan Proof System}
+        \begin{enumerate}
+            \item The prover sends the first message of a (two-round) perfectly-hiding commitment scheme, denoted $\mathsf{Com}_{\mathrm{h}} .$ 
+            \item The verifier chooses $N \stackrel{\text { def }}{=} n \cdot|E|$ random edges $e_{1}, \ldots, e_{N} \in_{R} E$. Let $q=\left(e_{1}, \ldots, e_{N}\right)$ be the query string; the verifier commits to $q$ using the perfectly-hiding commitment $\mathsf{Com}_{\mathrm{h}}$
+            \item The prover prepares the first message in $N$ parallel executions of the basic three-round proof system  (i.e., commitments to $N$ independent random colorings of the graph), and sends commitments to all using the perfectly-binding commitment scheme $\mathsf{Com}$.
+            \item The verifier decommits to the string $q$.
+            \item If the verifier's decommitment is invalid, then the prover aborts. Otherwise, the prover sends the appropriate decommitments in every execution. Specifically, if $e_{i}$ is the edge in the $i$ th execution, then the prover decommits to the nodes of that edge in the $i$ th set of commitments to colorings.
+            \item The verifier outputs 1 if and only if all checks pass.
+        \end{enumerate}
+    
+        
+    
+    \end{frame}
+    
+    \begin{frame}
+        \frametitle{}
+        \begin{theorem}
+            Let $\mathsf{Com}_{\mathrm{h}}$ and $\mathsf{Com}$ be perfectly-hiding and perfectly-binding commitment schemes, respectively. Then, GK Protocol above is bb-cZK with an expected polynomial-time simulator.
+        \end{theorem}
+    
+        \begin{proof}
+            \begin{enumerate}
+                \item $\mathcal{S}$ hands $V^{*}$ the first message of $\mathsf{Com}_{\mathrm{h}}$ .
+                \item $\mathcal{S}$ receives from $V^{*}$ its perfectly-hiding commitment $c$ to some query string $q=\left(e_{1}, \ldots, e_{N}\right)$, where $N=n \cdot|E|$.
+                \item $\mathcal{S}$ generates $N$ vectors of $n$ commitments to $0$ , hands them to $V^{*}$, and receives back its reply.
+                \item If $V^{*}$ aborts by not replying with a valid decommitment to $c$ (and the decommitment is to a vector of $N$ edges), then $\mathcal{S}$ aborts and outputs whatever $V^{*}$ outputs. Otherwise, let $q=\left(e_{1}, \ldots, e_{N}\right)$ be the decommitted value. $\mathcal{S}$ proceeds to the next step.
+                \item Rewinding phase $-\mathcal{S}$ repeatedly rewinds $V^{*}$ back to the point where it receives the prover commitments, until it decommits to $q$ from above:
+            \end{enumerate}
+        \end{proof}        
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{}
+        \begin{proof}
+            \begin{enumerate}
+                \setcounter{enumi}{4}
+                \item \begin{enumerate}
+                    \item $\mathcal{S}$ generates $N$ vectors of commitments $\vec{c}_{1}, \ldots, \vec{c}_{N}$, as follows. Let $e_{i}=\left(v_{j}, v_{k}\right)$ in $q$. Then, the $j$ th and $k$ th commitments in $\vec{c}_{i}$ are to random distinct colors in $\{1,2,3\}$ and all other commitments are to 0. Simulator $\mathcal{S}$ hands all vectors to $V^{*}$, and receives back its reply.
+                    \item  If $V^{*}$ does not generate a valid decommitment, then $\mathcal{S}$ returns to the previous step (using fresh randomness).
+                    \item If $V^{*}$ generates a valid decommitment to some $q^{\prime} \neq q$, then $\mathcal{S}$ outputs $\mathrm{ambiguous}$ and halts.
+                    \item Otherwise, $V^{*}$ exits the loop and proceeds to the next step.
+                \end{enumerate}
+                \item $\mathcal{S}$ completes the proof by handing $V^{*}$ decommitments to the appropriate nodes in all of $\vec{c}_{1}, \ldots, \vec{c}_{N}$, and outputs whatever $V^{*}$ outputs.
+            \end{enumerate}
+        \end{proof}
+        
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Simulator may not run in expected polynomial-time}
+        \begin{itemize}
+            \item The probability that the verifier decommits correctly when receiving the first prover \emph{commitments to pure garbage} is not necessarily the same as the probability that it decommits correctly when receiving the \emph{simulator-generated commitments}. 
+            \item If the verifier was all powerful, it could break open the commitments and purposefully make the simulation fail by decommitting when it receives pure garbage (or fully valid commitments) and not decommitting when it receives commitments that can be opened only to its query string. 
+            \item we can only argue that this doesn't happen by a reduction to the commitments, and this also means that there may be a negligible difference. Thus, we actually have that the expected running time of the simulator is
+            $$
+            \operatorname{poly}(n) \cdot\left(1-\epsilon(n)+\epsilon(n) \cdot \frac{1}{\epsilon(n)-\mu(n)}\right)
+            $$
+            let $\epsilon$ denote the probability that $V^{*}$ does not abort  
+        \end{itemize}
+    
+        
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{}
+    
+        \begin{figure}
+            \includegraphics[scale=0.2]{inception.png}
+        \end{figure}
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{}
+    
+        $\mu(n)=2^{-n / 2}-2^{-n}$ and $\epsilon(n)=\mu(n)+2^{-n}=2^{-n / 2}$. 
+        Then,
+        $$
+        \frac{\epsilon(n)}{\epsilon(n)-\mu(n)}=\frac{2^{-n / 2}}{2^{-n / 2}-\left(2^{-n / 2}-2^{-n}\right)}=\frac{2^{-n / 2}}{2^{-n}}=2^{n / 2}
+        $$
+
+      
+        \begin{itemize}
+            \item simulation does not run in expected polynomial-time.
+            \item This is solved by ensuring that the simulator $\mathcal{S}$ never runs "too long". 
+            \item $\mathcal{S}$ runs the rewinding phase in Step 5 of the simulation up to $n$ times. Each time, $\mathcal{S}$ limits the number of rewinding attempts in the rewinding phase to $n / \tilde{\epsilon}$ iterations. 
+        \end{itemize}
+        
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{}
+    
+        $\mathcal{S}$ first estimates the value of $\epsilon(n)$ which is the probability that $V^{*}$ does not abort given garbage commitments. This is done by repeating Step 3 of the simulation (sending fresh random commitments to all zeroes) until $m=O(n)$ successful decommits occurs (for a polynomial $m(n)$; to be exact $m=12 n$ suffices), where a successful decommit is where $V^{*}$ decommits to $q$, the string it first decommitted to. 
+
+        We remark that as in the original strategy, if $V^{*}$ correctly decommits to a different $q^{\prime} \neq q$ then $\mathcal{S}$ outputs ambiguous. Then, an estimate $\tilde{\epsilon}$ of $\epsilon$ is taken to be $m / T$, where $T$ is the overall number of attempts until $m$ successful decommits occurred. This suffices to ensure that the probability that $\tilde{\epsilon}$ is not within a constant factor of $\epsilon(n)$ is at most $2^{-n}$.
+
+        \begin{block}{Claim}
+            Simulator $\mathcal{S}$ runs in expected-time that is polynomial in $n$
+            
+        \end{block}
+
+        $$
+        \operatorname{poly}(n) \cdot \epsilon(n) \cdot\left(\frac{12 n}{\epsilon(n)}+n \cdot \frac{n}{\tilde{\epsilon}}\right)=\operatorname{poly}(n) \cdot \frac{\epsilon(n)}{\tilde{\epsilon}}=\operatorname{poly}(n)
+        $$
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{}
+        \begin{block}{Claim}
+            The probability that $\mathcal{S}$ outputs $\mathrm{fail}$ is negligible in $n$
+            
+        \end{block}
+        \begin{block}{Claim}
+            The probability that $\mathcal{S}$ outputs $\mathrm{ambiguous}$ is negligible in $n$
+        \end{block}
+
+        \begin{block}{Claim}
+            The output distribution generated by $\mathcal{S}$ is computationally indistinguishable from the output of $V^{*}$ in a real proof with an honest prover. 
+        \end{block}
+        
+    
+    \end{frame}
+
+
+    \subsection{Honest-Verifier Zero Knowledge}
+    \subsectionpage
+
+    \begin{frame}
+        \frametitle{}
+    
+        \begin{itemize}
+            \item A proof system is honest-verifier zero knowledge if the zero-knowledge property holds for semi-honest verifiers. 
+            \item $\Sigma$-protocol / Schnorr Signature
+            \item Consider the basic 3-coloring protocol described  run $n \cdot|E|$ times in parallel. Specifically, the prover generates $n \cdot|E|$ sets of commitments to random colorings and sends them to the verifier. The verifier chooses $q=\left(e_{1}, \ldots, e_{N}\right)$ at random and sends $q$ to the prover. Finally, the prover decommits as in the protocol.
+        \end{itemize}
+
+        \begin{theorem}
+             If $\mathrm{Com}$ is a perfectly-binding commitment scheme, then the parallel 3-coloring protocol is honest-verifier zero knowledge.
+        \end{theorem}
+    
+    \end{frame}
+    \begin{frame}
+        \frametitle{}
+        
+        \begin{proof}
+            $\mathcal{S}$:
+            \begin{enumerate}
+                \item Let $N=n \cdot|E| .$ Then, for $i=1, \ldots, N, \mathcal{S}$ chooses a random edge $e_{i} \in E$, and sets $q=\left(e_{1}, \ldots, e_{N}\right)$. Let $r_{q}$ be the random coin tosses that define $q$.
+                \item For every $i=1, \ldots, N$ :
+                \begin{enumerate}[a]
+                    \item Let $e_{i}=\left(v_{j}, v_{k}\right)$.
+                    \item $\mathcal{S}$ chooses random $\phi\left(v_{j}\right) \in_{R}\{1,2,3\}$ and $\phi\left(v_{k}\right) \in_{R}\{1,2,3\} \backslash\left\{\phi\left(v_{j}\right)\right\}$. For all other
+                    $v_{\ell} \in V \backslash\left\{v_{j}, v_{k}\right\}, \mathcal{S}$ sets $\phi\left(v_{\ell}\right)=0$
+                    \item $\mathcal{S}$ sets the commitment vector $\vec{c}_{i}=\left(c_{i}^{1}, \ldots, c_{i}^{n}\right)=\left(\operatorname{Com}\left(\phi\left(v_{1}\right)\right), \ldots, \operatorname{Com}\left(\phi\left(v_{n}\right)\right)\right)$.
+                    \item $\mathcal{S}$ sets the decommitment vector $\vec{d}_{i}=\left(\operatorname{decom}\left(c_{i}^{j}\right),\operatorname{decom}\left(c_{i}^{k}\right)\right)$
+                \end{enumerate}
+            \end{enumerate}
+        \end{proof}
+    
+        
+    
+    \end{frame}
+
+    \section{Defining Security for Malicious Adversaries}
+    \sectionpage 
+    \begin{frame}
+        \frametitle{Execution in the ideal model}
+        \begin{definition}[Ideal Execution]
+            Denote the participating parties by $P_{1}$ and $P_{2}$ and let $i \in\{1,2\}$ denote the index of the corrupted party, controlled by an adversary $\mathcal{A} .$ 
+
+            An ideal execution for a function $f:\{0,1\}^{*} \times\{0,1\}^{*} \rightarrow\{0,1\}^{*} \times\{0,1\}^{*}$ proceeds as follows:
+
+            \begin{itemize}
+                \item \textbf{Inputs}: Let $x$ denote the input of party $P_{1}$, and let $y$ denote the input of party $P_{2}$. The adversary $\mathcal{A}$ also has an auxiliary input denoted by $z .$ All parties are initialized with the same value $1^{n}$ on their security parameter tape (including the trusted party).
+                \item \textbf{Send inputs to trusted party}: The honest party $P_{j}$ sends its prescribed input to the trusted party. 
+
+                The corrupted party $P_{i}$ controlled by $\mathcal{A}$ may either abort (by replacing the input with a special $\mathrm{abort}_{i}$ message), send its prescribed input, or send some other input of the same length to the trusted party. 
+                
+                Denote the pair of inputs sent to the trusted party by $\left(x^{\prime}, y^{\prime}\right)$ .
+            \end{itemize}
+
+        \end{definition}
+    
+        
+    
+    \end{frame}
+    \begin{frame}
+    
+        \begin{definition}
+            \begin{itemize}
+                \item \textbf{Early abort option}: If the trusted party receives an input of the form $\mathrm{abort}_{i}$ for some $i \in\{1,2\}$, it sends $\mathrm{abort}_{i}$ to the honest party $P_{j}$ and the ideal execution terminates. Otherwise, the execution proceeds to the next step.
+                \item \textbf{Trusted party sends output to adversary}: At this point the trusted party computes $f_{1}\left(x^{\prime}, y^{\prime}\right)$ and $f_{2}\left(x^{\prime}, y^{\prime}\right)$ and sends $f_{i}\left(x^{\prime}, y^{\prime}\right)$ to party $P_{i}$ .
+                \item \textbf{Adversary instructs trusted party to continue or halt}: $\mathcal{A}$ sends either $\mathrm{continue}$ or $\mathrm{abort}_{i}$ to the trusted party. If it sends $\mathrm{continue}$, the trusted party sends $f_{j}\left(x^{\prime}, y^{\prime}\right)$ to the honest party $P_{j}$. If $\mathcal{A}$ sends $\mathrm{abort}_{i}$, the trusted party sends $\mathrm{abort}_{i}$ to party $P_{j}$.
+                \item \textbf{Outputs}: The honest party always outputs the output value it obtained from the trusted party. The corrupted party outputs nothing. The adversary $\mathcal{A}$ outputs any arbitrary function of the prescribed input of the corrupted party, the auxiliary input $z$, and the value $f_{i}\left(x^{\prime}, y^{\prime}\right)$ obtained from the trusted party.
+
+            \end{itemize}
+        \end{definition}
+    
+    \end{frame}
+    \begin{frame}
+        \frametitle{Execution in the ideal model}
+        
+        \begin{definition}
+            The ideal execution of $f$ on inputs $(x, y)$, auxiliary input $z$ to $\mathcal{A}$ and security parameter $n$, denoted by $\operatorname{IDEAL}_{f, \mathcal{A}(z), i}(x, y, n)$, is defined as the output pair of the honest party and the adversary $\mathcal{A}$ from the above ideal execution.
+        \end{definition}
+
+        \begin{itemize}
+            \item In the case of no honest majority (and in particular in the two-party case), it is in general impossible to achieve \textbf{guaranteed output delivery} and \textbf{fairness}. 
+            \item This "weakness" is therefore incorporated into the ideal model by allowing the adversary in an ideal execution to abort the execution or obtain output without the honest party obtaining its output.
+        \end{itemize}
+    
+    \end{frame}
+    \begin{frame}
+        \frametitle{Execution in the real model}
+        \begin{definition}
+            let $\pi$ be a two-party protocol for computing $f$, meaning that when $P_{1}$ and $P_{2}$ are both honest, then the parties output $f_{1}(x, y)$ and $f_{2}(x, y)$, respectively, after an execution of $\pi$ with respective inputs $x$ and $y$. 
+
+            The real execution of $\pi$ on inputs $(x, y)$, auxiliary input $z$ to $\mathcal{A}$ and security parameter $n$, denoted by $\operatorname{REAL}_{\pi, \mathcal{A}(z), i}(x, y, n)$, is defined as the output pair of the honest party and the adversary $\mathcal{A}$ from the real execution of $\pi$
+        \end{definition}
+        \begin{itemize}
+            \item there exists no trusted third party 
+
+            \item the adversary $\mathcal{A}$ sends all messages in place of the corrupted party, and may follow an arbitrary polynomial-time strategy. 
+            
+            \item the honest party follows the instructions of $\pi .$ 
+            
+            \item a simple network setting where the protocol proceeds in rounds, where in each round one party sends a message to the other party.
+        \end{itemize}
+        
+    
+    \end{frame}
+    \begin{frame}
+        \frametitle{Defining Security for Malicious Adversaries}
+        \begin{definition}
+            Let $f$ be a two-party functionality and let $\pi$ be a two-party protocol that computes $f .$ Protocol $\pi$ is said to \textbf{securely compute} $f$ \textbf{with abort in the presence of static malicious adversaries} if for every non-uniform probabilistic polynomial-time adversary $\mathcal{A}$ for the real model, there exists a non-uniform probabilistic polynomial-time adversary $\mathcal{S}$ for the ideal model, such that for every $i \in\{1,2\}$
+        $$
+        \left\{\operatorname{IDEAL}_{f, \mathcal{S}(z), i}(x, y, n)\right\}_{x, y, z, n} \stackrel{\mathrm{c}}{\equiv}\left\{\operatorname{REAL}_{\pi, \mathcal{A}(z), i}(x, y, n)\right\}_{x, y, z, n}
+        $$
+        where $x, y \in\{0,1\}^{*}$ under the constraint that $|x|=|y|, z \in\{0,1\}^{*}$ and $n \in \mathbb{N}$.
+        \end{definition}
+
+        \begin{itemize}
+            \item a secure protocol (in the real model) \textbf{emulates} the ideal model (in which a trusted party exists). 
+            \item adversaries in the ideal model (simulator) are able to \textbf{simulate} executions of the real-model protocol.
+        \end{itemize}
+        
+    
+        
+    
+    \end{frame}
+    \begin{frame}
+        \frametitle{Discussion}
+        \begin{itemize}
+            \item Definition implies \textbf{privacy} (meaning that nothing but the output is learned), \textbf{corrrectness} (meaning that the output is correctly computed) and more. 
+            \item Since the IDEAL and REAL distributions must be indistinguishable, this in particular implies that the output of the adversary in the IDEAL and REAL executions is indistinguishable. Thus, whatever the adversary learns in a real execution can be learned in the ideal model. In the ideal model, the adversary cannot learn anything about the honest party's input beyond what is revealed in the output. 
+            \item Regarding correctness, if the adversary can cause the honest party's output to diverge from a correct value in a real execution, then this will result in a non-negligible difference between the distribution over the honest party's output in the real and ideal executions. 
+        \end{itemize}
+    
+        
+    
+    \end{frame}
+    \subsection{Modular Sequential Composition}
+    \subsectionpage
+
+    \begin{frame}
+        \frametitle{The hybrid model}
+        \begin{itemize}
+            \item Parties both interact with each other (as in the real model) and use trusted help (as in the ideal model). 
+            \item \begin{itemize}
+                \item \textbf{standard messages} : regular messages of $\pi$ that are sent amongst the parties
+                \item \textbf{ideal messages}:  the messages that are sent between parties and the trusted party.   
+            \end{itemize}
+            \item the parties run a protocol $\pi$ that contains "ideal calls" to a trusted party computing some functionalities $f_{1}, \ldots, f_{p(n)}$. These ideal calls are just instructions to send an input to the trusted party. Upon receiving the output back from the trusted party, the protocol $\pi$ continues. 
+            \item The protocol $\pi$ is such that $f_{i}$ is called before $f_{i+1}$ for every $i$
+        \end{itemize}
+    
+        
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Sequential composition – malicious adversaries}
+        Let $f_{1}, \ldots, f_{p(n)}$ be probabilistic polynomialtime functionalities and let $\pi$ be a two-party hybrid-model protocol that uses ideal calls to a trusted party computing $f_{1}, \ldots, f_{p(n)} .$ 
+
+        The $f_{1}, \ldots, f_{p(n)}$ -\textbf{hybrid execution} of $\pi$ on inputs $(x, y)$, auxiliary input $z$ to $\mathcal{A}$ and security parameter $n$, denoted $\mathrm{HYBRID}_{\pi, \mathcal{A}(z), i}^{f_{1}, \ldots, f_{p(n)}}(x, y, n)$ is defined as the output of the honest party and the adversary $\mathcal{A}$ from the hybrid execution of $\pi$ with a trusted party computing $f_{1}, \ldots, f_{p(n)}$    
+    
+        
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Sequential composition – malicious adversaries}
+        \begin{definition}[Real protocol $\pi^{\rho_{1}, \ldots, \rho_{p(n)}}$ ]
+            
+
+            All standard messages of $\pi$ are unchanged. 
+
+            When a party is instructed to send an ideal message $\alpha$ to the trusted party to compute $f_{j}$, it begins a real execution of $\rho_{j}$ with input $\alpha$ instead. When this execution of $\rho_{j}$ concludes with output $y$, the party continues with $\pi$ as if $y$ were the output received from the trusted party for $f_{j}$ (i.e., as if it were running in the hybrid model).
+
+            
+        \end{definition}
+        \begin{theorem}
+            Let $p(n)$ be a polynomial, let $f_{1}, \ldots, f_{p(n)}$ be two-party probabilistic polynomial-time functionalities and let $\rho_{1}, \ldots, \rho_{p(n)}$ be protocols such that each $\rho_{i}$ securely computes $f_{i}$ in the presence of malicious adversaries. Let $g$ be a two-party functionality and let $\pi$ be a protocol that securely computes $g$ in the $f_{1}, \ldots, f_{p(n)}$ -hybrid model in the presence of malicious adversaries. Then, $\pi^{\rho_{1}, \ldots, \rho_{p}(n)}$ securely computes $g$ in the presence of malicious adversaries.
+
+        \end{theorem}
+    
+        
+    
+    \end{frame}
+
+    \section{Determining Output – Coin Tossing}
+
+    \sectionpage
+    \subsection{Coin Tossing a Single Bit}
+    \subsectionpage
+    \begin{frame}
+        \frametitle{Coin Tossing a Single Bit}
+        \begin{itemize}
+            \item The protocol by Blum for \textbf{tossing a single coin} securely : The protocol securely computes the functionality $f_{\mathrm{ct}}(\lambda, \lambda)=\left(U_{1}, U_{1}\right)$ where $U_{1}$ is a random variable that is uniformly distributed over $\{0,1\}$. 
+            \item  It is possible for one party to see the output and then abort before the other receives it (e.g., in the case that it is not a favorable outcome for that party). Because it is impossible for two parties to toss a coin fairly so that neither party can cause a premature abort or bias the outcome
+            \item We defined a real model where protocols proceed in rounds and in each round one message is sent from one party to the other.
+        \end{itemize}
+    
+        
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{}
+    
+        \begin{block}{Blum’s Coin Tossing of a Single Bit}
+            \begin{enumerate}
+                \item $P_{1}$ chooses a random $b_{1} \in\{0,1\}$ and a random $r \in\{0,1\}^{n}$ and sends $c=\operatorname{Com}\left(b_{1} ; r\right)$ to $P_{2}$.
+                \item Upon receiving $c$, party $P_{2}$ chooses a random $b_{2} \in\{0,1\}$ and sends $b_{2}$ to $P_{1}$.
+                \item Upon receiving $b_{2}$, party $P_{1}$ sends $\left(b_{1}, r\right)$ to $P_{2}$ and outputs $b=b_{1} \oplus b_{2} .$ (If $P_{2}$ does not reply, or replies with an invalid value, then $P_{2}$ sets $b_{2}=0 .$ )
+                \item Upon receiving $\left(b_{1}, r\right)$ from $P_{1}$, party $P_{2}$ checks that $c=\operatorname{Com}\left(b_{1} ; r\right) .$ If yes, it outputs $b=b_{1} \oplus b_{2} ;$ else it outputs $\perp$.
+            \end{enumerate}
+        \end{block}
+        \begin{theorem}
+            Assume that Com is a perfectly-binding commitment scheme. Then, Protocol above securely computes the bit coin-tossing functionality defined by $f_{\mathrm{ct}}(\lambda, \lambda)=\left(U_{1}, U_{1}\right) .$
+        \end{theorem}
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{}
+    
+        \begin{figure}[]
+            \includegraphics[scale=0.25]{blum.png}
+        \end{figure}
+
+        \begin{quote}
+            I would like to add a personal anecdote here. The first proof of security that I read that followed the ideal/real simulation paradigm with security for malicious adversaries was this proof by Oded Goldreich (it appeared in a very early draft on Secure Multiparty Computation that can be found at www.wisdom.weizmann.ac.il/∼oded/pp.html). I remember reading it multiple times until I understood why all the complications were necessary. Thus, for me, this proof brings back fond memories of my first steps in secure computation. 
+        
+            -- by Lindell
+        \end{quote}
+
+       
+
+    
+    \end{frame}
+    \begin{frame}
+        \frametitle{}
+
+        The simulator here is the ideal-model adversary. It \textbf{externally interacts} with the trusted party computing the functionality, and \textbf{internally interacts} with the real-model adversary as part of the simulation. (Internal interaction is not real, and is just the simulator internally feeding messages to $\mathcal{A}$ that it runs as a subroutine)
+        
+        \begin{figure}[]
+            \includegraphics[scale=0.4]{wittgenstein.png}
+        \end{figure}
+
+        The simulator needs to send the trusted party the corrupted party's input and receive back its output. In this specific case of coin tossing, the parties have no input, and so the adversary just receives the output from the trusted party (formally, the parties send an empty string $\lambda$ as input so that the trusted party knows to compute the functionality). 
+ 
+        The challenge of the simulator is to make the output of the execution that it simulates equal the output that it received from the trusted party.
+        
+    \end{frame}
+    \begin{frame}
+        \frametitle{$P_{2}$ is corrupted}
+    
+        \begin{proof}
+            Simulator $\mathcal{S}$ :
+            \begin{enumerate}
+                \item $\mathcal{S}$ sends $\lambda$ externally to the trusted party computing $f_{\mathrm{ct}}$ and receives back a bit $b$.
+                \item $\mathcal{S}$ initializes a counter $i=1$.
+                \item $\mathcal{S}$ invokes $\mathcal{A}$, chooses a random $b_{1} \in_{R}\{0,1\}$ and $r \in_{R}\{0,1\}^{n}$ and internally hands $\mathcal{A}$ the value $c=\operatorname{Com}\left(b_{1} ; r\right)$ as if it was sent by $P_{2}$.
+                \item If $\mathcal{A}$ replies with $b_{2}=b \oplus b_{1}$, then $\mathcal{S}$ internally hands $\mathcal{A}$ the pair $\left(b_{1}, r\right)$ and outputs whatever $\mathcal{A}$ outputs. (As in the protocol, if $\mathcal{A}$ does not reply or replies with an invalid value, then this is interpreted as $b_{2}=0$.)
+                \item If $\mathcal{A}$ replies with $b_{2} \neq b \oplus b_{1}$ and $i<n$, then $\mathcal{S}$ sets $i=i+1$ and returns back to Step 3 .
+                \item  If $i=n$, then $\mathcal{S}$ outputs $\mathrm{fail}$.
+            \end{enumerate}
+            
+        \end{proof}
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{$P_{2}$ is corrupted}
+    
+        \begin{block}{Claim 1}
+            $\mathcal{S}$ outputs $\mathrm{fail}$ with negligible probability
+        \end{block}
+    
+        \begin{block}{Claim 2}
+            Conditioned on $\mathcal{S}$ does not output $\mathrm{fail}$, the output distributions $\mathrm{IDEAL}$ and $\mathrm{REAL}$ are statistically close. 
+        \end{block}
+        \begin{itemize}
+            \item \textbf{Real}: In a real execution, $b_{1}$ and $r$ are uniformly distributed.
+            \item \textbf{Ideal}: In an ideal execution, a random $b$ is chosen, and then random $b_{1}$ and $r$ are chosen under the constraint that $b_{1} \oplus \mathcal{A}\left(\operatorname{Com}\left(b_{1} ; r\right)\right)=b$.
+        \end{itemize}
+    \end{frame}
+    \begin{frame}
+        \frametitle{$P_{1}$ is corrupted}
+        \begin{proof}
+            Simulator $\mathcal{S}$:
+            \begin{enumerate}
+                \item $\mathcal{S}$ sends $\lambda$ externally to the trusted party computing $f_{\mathrm{ct}}$ and receives back a bit $b$.
+                \item $\mathcal{S}$ invokes $\mathcal{A}$ and internally receives the message $c$ that $\mathcal{A}$ sends to $P_{1}$.
+                \item $\mathcal{S}$ internally hands $\mathcal{A}$ the bit $b_{2}=0$ as if coming from $P_{2}$, and receives back its reply. Then, $\mathcal{S}$ internally hands $\mathcal{A}$ the bit $b_{2}=1$ as if coming from $P_{2}$, and receives back its reply. 
+                \begin{enumerate}[a]
+                    \item If $\mathcal{A}$ replies with a valid decommitment $\left(b_{1}, r\right)$ such that $\operatorname{Com}\left(b_{1} ; r\right)=c$ in both iterations, then $\mathcal{S}$ externally sends $\mathrm{continue}$ to the trusted party. In addition, $\mathcal{S}$ defines $b_{2}=b_{1} \oplus b$, internally hands $\mathcal{A}$ the bit $b_{2}$, and outputs whatever $\mathcal{A}$ outputs.
+                    \item If $\mathcal{A}$ does not reply with a valid decommitment in either iteration, then $\mathcal{S}$ externally sends $\mathrm{abort}_{1}$ to the trusted party. Then, $\mathcal{S}$ internally hands $\mathcal{A}$ a random bit $b_{2}$ and outputs whatever $\mathcal{A}$ outputs.
+                    
+                \end{enumerate}
+            \end{enumerate}
+            
+        \end{proof}
+    
+
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{$P_{1}$ is corrupted}
+    
+        \begin{proof}
+            \begin{enumerate}[c]
+                
+                \item  If $\mathcal{A}$ replies with a valid decommitment $\left(b_{1}, r\right)$ such that $\operatorname{Com}\left(b_{1} ; r\right)=c$ only when given $b_{2}$ where $b_{1} \oplus b_{2}=b$, then $\mathcal{S}$ externally sends $\mathrm{continue}$ to the trusted party. Then, $\mathcal{S}$ internally hands $\mathcal{A}$ the bit $b_{2}=b_{1} \oplus b$ and outputs whatever $\mathcal{A}$ outputs.
+                \item If $\mathcal{A}$ replies with a valid decommitment $\left(b_{1}, r\right)$ such that $\operatorname{Com}\left(b_{1} ; r\right)=c$ only when given $b_{2}$ where $b_{1} \oplus b_{2} \neq b$, then $\mathcal{S}$ externally sends $\mathrm{abort}_{1}$ to the trusted party. Then, $\mathcal{S}$ internally hands $\mathcal{A}$ the bit $b_{2}=b_{1} \oplus b \oplus 1$ and outputs whatever $\mathcal{A}$ outputs.
+            \end{enumerate}
+        \end{proof}
+
+        \begin{block}{Claim}
+            In each case,  the joint distributions over $\mathcal{A}$ 's output and the honest party's output are identical in the real and ideal executions.
+            
+        \end{block}
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Discussion}
+    
+        \begin{itemize}
+            \item In the malicious setting, many additional issues needed to be dealt with:
+            \begin{enumerate}
+                \item The adversary can send any message and so the simulator must "interact" with it.
+                \item The adversary may abort in some cases and this must be carefully simulated so that the distribution is not skewed when aborts can happen.
+                \item The adversary may abort after it receives the output and before the honest party receives the output. This must be correlated with the $\mathrm{abort}$ and $\mathrm{continue}$ instructions sent to the trusted party, in order to ensure that the honest party aborts with the same probability in the real and ideal executions, and that this behavior matches the view of the adversary.
+            \end{enumerate}
+            \item The need to consider the joint distribution over the outputs, and to simulate for the output received from the trusted party, adds considerable complexity.
+        \end{itemize}
+    
+    \end{frame}
+
+    \subsection{Securely Tossing Many Coins and the Hybrid Model}
+    \subsectionpage
+    \begin{frame}
+        \frametitle{}
+    
+        \begin{itemize}
+            \item To toss $\ell=\operatorname{poly}(n)$ many coins in a constant number of rounds: $f_{\mathrm{ct}}^{\ell}(\lambda, \lambda)=\left(U_{\ell(n)}, U_{\ell(n)}\right) .$ 
+            \item Assume that we are given a constant-round protocol that securely computes the \textbf{zero-knowledge proof of knowledge functionality} for any $\mathcal{N} \mathcal{P}$ -relation. This functionality is parameterized by a relation $R \in \mathcal{N} \mathcal{P}$ and is defined by $f_{z k}^{R}((x, w), x)=(\lambda, R(x, w)) .$ 
+            \item \textbf{Hybrid functionalities}: 
+            \begin{itemize}
+                \item Let $L_{1}=\{c \mid \exists(x, r): c=\operatorname{Com}(x ; r)\}$ be the language of all valid commitments, and let $R_{1}$ be its associated $\mathcal{N} \mathcal{P}$ -relation (for statement $c$ the witness is $x, r$ such that $c=\operatorname{Com}(x ; r)) .$ 
+                \item Let $L_{2}=\{(c, x) \mid \exists r: c=\operatorname{Com}(x ; r)\}$ be the language of all pairs of commitments and committed values, and let $R_{2}$ be its associated $\mathcal{N} \mathcal{P}$ -relation (for statement $(c, x)$ the witness is $r$ such that $c=\operatorname{Com}(x ; r))$. 
+                \item The parties have access to a trusted party that computes the zero-knowledge proof of knowledge functionalities $f_{z k}^{R_{1}}$ and $f_{z k}^{R_{2}}$ associated with relations $R_{1}$ and $R_{2}$, respectively.
+            \end{itemize}
+
+        \end{itemize}
+    
+    \end{frame}
+    \begin{frame}
+        \frametitle{}
+    
+        \begin{block}{Multiple Coin Tossing}
+            \begin{enumerate}
+                \item $P_{1}$ chooses a random $\rho_{1} \in\{0,1\}^{\ell(n)}$ and a random $r \in\{0,1\}^{\text {poly}(n)}$ of length sufficient to commit to $\ell(n)$ bits, and sends $c=\operatorname{Com}\left(\rho_{1} ; r\right)$ to $P_{2}$.
+                \item $P_{1}$ sends $\left(c,\left(\rho_{1}, r\right)\right)$ to $f_{\mathrm{zk}}^{R_{1}}$.
+                \item Upon receiving $c$, party $P_{2}$ sends $c$ to $f_{z k}^{R_{1}}$ and receives back a bit $b$. If $b=0$ then $P_{2}$ outputs $\perp$ and halts. Otherwise, it proceeds.
+                \item  $P_{2}$ chooses a random $\rho_{2} \in\{0,1\}^{\ell(n)}$ and sends $\rho_{2}$ to $P_{1}$.
+                \item Upon receiving $\rho_{2}$, party $P_{1}$ sends $\rho_{1}$ to $P_{2}$ and sends $\left(\left(c, \rho_{1}\right), r\right)$ to $f_{\mathrm{zk}}^{R_{2}} .$ (If $P_{2}$ does not reply, or replies with an invalid value, then $P_{1}$ sets $\rho_{2}=0^{\ell(n)}$)
+                \item Upon receiving $\rho_{1}$, party $P_{2}$ sends $\left(c, \rho_{1}\right)$ to $f_{\mathrm{zk}}^{R_{2}}$ and receives back a bit $b .$ If $b=0$ then $P_{2}$ outputs $\perp$ and halts. Otherwise, it outputs $\rho=\rho_{1} \oplus \rho_{2}$.
+                \item $P_{1}$ outputs $\rho=\rho_{1} \oplus \rho_{2}$.
+            \end{enumerate}
+            
+        \end{block}
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Proving in the hybrid model}
+        $\mathcal{S}$ has many types of interactions :
+        \begin{enumerate}
+            \item External interaction with the trusted party: this is real interaction where $\mathcal{S}$ sends and receives messages externally.
+            \item Internal simulated interaction with the real adversary $\mathcal{A}$ : this is simulated interaction and involves internally invoking $\mathcal{A}$ as a subroutine on incoming messages. This interaction is of two sub-types:
+            \begin{enumerate}[a]
+                \item  Internal simulation of real messages between $\mathcal{A}$ and the honest party.
+                \item  \textbf{Internal simulation of ideal messages} between $\mathcal{A}$ and the trusted party computing the functionality used as a subprotocol in the hybrid model.The simulator directly receives the input that the adversary sends and can write any output that it likes.
+            \end{enumerate}
+        \end{enumerate}
+
+        \begin{theorem}
+            Assume that $\mathrm{Com}$ is a perfectly-binding commitment scheme and let $\ell$ be a polynomial. Then, Protocol above securely computes the functionality $f_{\mathrm{ct}}^{\ell}(\lambda, \lambda)=\left(U_{\ell(n)}, U_{\ell(n)}\right)$ in the $\left(f_{\mathrm{zk}}^{R_{1}}, f_{\mathrm{zk}}^{R_{2}}\right)$ -hybrid model.
+        \end{theorem}
+        
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{$P_{1}$ corrupted}
+    
+        \begin{proof}
+            Simulator $\mathcal{S}$ :
+            \begin{enumerate}
+                \item $\mathcal{S}$ invokes $\mathcal{A}$, and receives the message $c$ that $\mathcal{A}$ sends to $P_{2}$, and the message $\left(c^{\prime},\left(\rho_{1}, r\right)\right)$ that $\mathcal{A}$ sends to $f_{\mathrm{zk}}^{R_{1}}$.
+                \item  If $c^{\prime} \neq c$ or $c \neq \operatorname{Com}\left(\rho_{1} ; r\right)$, then $\mathcal{S}$ sends $\mathrm{abort}_{1}$ to the trusted party computing $f_{\mathrm{ct}}^{\ell}$, simulates $P_{2}$ aborting, and outputs whatever $\mathcal{A}$ outputs. Otherwise, it proceeds to the next step.
+                \item $\mathcal{S}$ sends $1^{n}$ to the external trusted party computing $f_{\mathrm{ct}}^{\ell}$ and receives back a string $\rho \in\{0,1\}^{\ell(n)}$.
+                \item $\mathcal{S}$ sets $\rho_{2}=\rho \oplus \rho_{1}$ (where $\rho$ is as received from $f_{\mathrm{ct}}^{\ell}$ and $\rho_{1}$ is as received from $\mathcal{A}$ as part of its message to $\left.f_{z k}^{R_{1}}\right)$, and internally hands $\rho_{2}$ to $\mathcal{A}$.
+
+            \end{enumerate}
+        \end{proof}
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{}
+    
+        \begin{proof}
+            \begin{enumerate}
+                \setcounter{enumi}{4}
+                \item $\mathcal{S}$ receives the message $\rho_{1}^{\prime}$ that $\mathcal{A}$ sends to $P_{2}$, and the message $\left(\left(c^{\prime \prime}, \rho_{1}^{\prime \prime}\right), r^{\prime \prime}\right)$ that $\mathcal{A}$ sends to $f_{\mathrm{zk}}^{R_{2}} .$ If $c^{\prime \prime} \neq c$ or $\rho_{1}^{\prime} \neq \rho_{1}^{\prime \prime}$ or $c \neq \operatorname{Com}\left(\rho_{1}^{\prime \prime} ; r^{\prime \prime}\right)$ then $\mathcal{S}$ sends $\mathrm{abort}_{1}$ to the trusted party computing $f_{\mathrm{ct}}^{\ell}$, simulates $P_{2}$ aborting, and outputs whatever $\mathcal{A}$ outputs. Otherwise, $\mathcal{S}$ externally sends $\mathrm{continue}$ to the trusted party, and outputs whatever $\mathcal{A}$ outputs.
+            \end{enumerate}
+        \end{proof}
+        \begin{block}{Claim}
+            Joint distribution over $\mathcal{A}$ 's view and $P_{2}$ 's output is identical in the real and ideal executions. 
+        \end{block}
+    
+    \end{frame}
+    \begin{frame}
+        \frametitle{$P_{2}$ corrupted}
+        \begin{proof}
+            Simulator $\mathcal{S}$ :
+            \begin{enumerate}
+                \item $\mathcal{S}$ sends $1^{n}$ to the external trusted party computing $f_{\mathrm{ct}}^{\ell}$ and receives back a string $\rho \in\{0,1\}^{\ell(n)}$. $\mathcal{S}$ externally sends $\mathrm{continue}$ to the trusted party $\left(P_{1}\right.$ always receives output).
+                \item $\mathcal{S}$ chooses a random $r \in\{0,1\}^{\text {poly }(n)}$ of sufficient length to commit to $\ell(n)$ bits, and computes $c=\operatorname{Com}\left(0^{\ell(n)} ; r\right)$
+                \item $\mathcal{S}$ internally invokes $\mathcal{A}$ and hands it $c$.
+                \item $\mathcal{S}$ receives back some $\rho_{2}$ from $\mathcal{A}$ .
+                \item $\mathcal{S}$ sets $\rho_{1}=\rho_{2} \oplus \rho$ and internally hands $\mathcal{A}$ the message $\rho_{1}$ .
+                \item $\mathcal{S}$ receives some pair $\left(c^{\prime}, \rho_{1}^{\prime}\right)$ from $\mathcal{A}$ as it sends to $f_{\mathrm{zk}}^{R_{2}}$ (as the "verifier"). If $\left(c^{\prime}, \rho_{1}^{\prime}\right) \neq$ $\left(c, \rho_{1}\right)$ then $\mathcal{S}$ internally simulates $f_{z k}^{R_{2}}$ sending 0 to $\mathcal{A}$. Otherwise, $\mathcal{S}$ internally simulates $f_{z k}^{R_{2}}$ sending 1 to $\mathcal{A}$.
+                \item $\mathcal{S}$ outputs whatever $\mathcal{A}$ outputs.
+            \end{enumerate}
+        \end{proof}
+        
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{$P_{2}$ corrupted}
+        \begin{proof}
+            Let $\mathcal{S}^{\prime}$ work in the same way as $\mathcal{S}$ except that instead of receiving $\rho$ externally from the trusted party, $\mathcal{S}^{\prime}$ chooses $\rho$ by itself (uniformly at random) after receiving $\rho_{2}$ from $\mathcal{A} .$ In addition, the output of the honest party is set to be $\rho .$ 
+            $\mathcal{S}^{\prime}$ outputs the pair $(\rho$, output $(\mathcal{A}))$, where output $(\mathcal{A})$ is the output of $\mathcal{A}$ after the simulation. 
+        \end{proof}
+
+        \begin{block}{Claim 1}
+            $$
+            \left\{\mathcal{S}^{\prime}\left(1^{n}\right)\right\}_{n \in \mathbb{N}} \equiv\left\{\operatorname{IDEAL}_{f_{\mathrm{ct}}^{\ell}, \mathcal{S}}\left(1^{n}, 1^{n}, n\right)\right\}_{n \in \mathbb{N}}
+            $$
+        \end{block}
+
+
+        \begin{block}{Claim 2}
+            $$
+            \left\{\mathcal{S}^{\prime}\left(1^{n}\right)\right\}_{n \in \mathbb{N}} \stackrel{c}{\equiv}\left\{\operatorname{REAL}_{\pi, \mathcal{A}}\left(1^{n}, 1^{n}, n\right)\right\}_{n \in \mathbb{N}}
+            $$
+            
+        \end{block}
+    
+        
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Discussion}
+        \begin{itemize}
+            \item No rewinding is necessary. 
+            \item Nnot necessary to justify that the simulation is polynomial time, 
+            \item Not necessary to justify that the output distribution is not skewed by the rewinding procedure.
+        \end{itemize}
+    
+        
+    
+    \end{frame}
+
+    \section{Extracting Inputs – Oblivious Transfer}
+    \sectionpage
+    \begin{frame}
+        \frametitle{RAND procedure}
+        \begin{definition}
+            Let $\mathbb{G}$ be a multiplicative group of prime order $q$. Define the probabilistic procedure
+            $$
+            R A N D(g, x, y, z)=(u, v)=\left(g^{s} \cdot y^{t}, x^{s} \cdot z^{t}\right)
+            $$
+            where $s, t \in_{R} \mathbb{Z}_{q}$ are uniformly random.
+        \end{definition}
+        \begin{block}{Claim}
+            Let $g$ be a generator of $\mathbb{G}$ and let $x, y, z \in \mathbb{G} .$ If $(g, x, y, z)$ do not form a Diffie-Hellman tuple (i.e., there does not exist $a \in \mathbb{Z}_{q}$ such that $y=g^{a}$ and $\left.z=x^{a}\right)$, then $R A N D(g, x, y, z)$ is uniformly distributed in $\mathbb{G}^{2} .$
+        \end{block}
+    
+        
+    
+    \end{frame}
+    
+    \begin{frame}
+        \frametitle{Oblivious Transfer}
+        \begin{itemize}
+            \item  Oblivious transfer functionality : $f_{\text {ot}}\left(\left(x_{0}, x_{1}\right), \sigma\right)=\left(\lambda, x_{\sigma}\right)$ 
+            \item Simulator must \textbf{extract} the input from the adversary, send it to the trusted party and receive back the output. The view generated by the simulator must then correspond to this input and output.
+            \item Let $L=\left\{\left(\mathbb{G}, q, g_{0}, x, y, z\right) \mid \exists a \in \mathbb{Z}_{q}: y=\left(g_{0}\right)^{a} \wedge z=x^{a}\right\}$ be
+            the language of all Diffie-Hellman tuples , and let $R_{L}$ be its associated $\mathcal{N} \mathcal{P}$ -relation. The parties have access to a trusted party that computes the zero-knowledge proof of knowledge functionality $f_{\mathrm{zk}}^{R_{L}}$ associated with relation $R_{L}$.
+        \end{itemize}
+    
+        
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Oblivious Transfer}
+        
+        \begin{enumerate}
+            \item Party $P_{2}$ chooses random values $y, \alpha \in_{R} \mathbb{Z}_{q}$ and computes $g_{1}=\left(g_{0}\right)^{y}, h_{0}=\left(g_{0}\right)^{\alpha}$ and $h_{1}=\left(g_{1}\right)^{\alpha+1}$ and sends $\left(g_{1}, h_{0}, h_{1}\right)$ to party $P_{1}$.
+            \item $P_{2}$ sends statement $\left(\mathbb{G}, q, g_{0}, g_{1}, h_{0}, \frac{h_{1}}{g_{1}}\right)$ and witness $\alpha$ to $f_{\mathrm{zk}}^{R_{L}}$.
+            \item  $P_{1}$ sends statement $\left(\mathbb{G}, q, g_{0}, g_{1}, h_{0}, \frac{h_{1}}{g_{1}}\right)$ to $f_{\mathrm{zk}}^{R_{L}}$ and receives back a bit. If the bit equals 0 , then it halts and outputs $\perp$. Otherwise, it proceeds to the next step.
+            \item $P_{2}$ chooses a random value $r \in_{R} \mathbb{Z}_{q}$, computes $g=\left(g_{\sigma}\right)^{r}$ and $h=\left(h_{\sigma}\right)^{r}$, and sends $(g, h)$ to $P_{1}$
+            \item $P_{1}$ computes $\left(u_{0}, v_{0}\right)=R A N D\left(g_{0}, g, h_{0}, h\right)$, and $\left(u_{1}, v_{1}\right)=R A N D\left(g_{1}, g, h_{1}, h\right)$. $P_{1}$ sends $P_{2}$ the values $\left(u_{0}, w_{0}\right)$ where $w_{0}=v_{0} \cdot x_{0}$, and $\left(u_{1}, w_{1}\right)$ where $w_{1}=v_{1} \cdot x_{1}$.
+            \item $P_{2}$ computes $x_{\sigma}=w_{\sigma} /\left(u_{\sigma}\right)^{r}$.
+            \item $P_{1}$ outputs $\lambda$ and $P_{2}$ outputs $x_{\sigma}$
+            
+        \end{enumerate}
+            
+       
+    
+        
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{}
+    
+        \begin{theorem}
+            Assume that the Decisional Diffie-Hellman problem is hard in the auxiliary-input group G. Then, Protocol above securely computes $f_{\text {ot}}$ in the presence of malicious adversaries.
+        \end{theorem}
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{$P_{1}$ is corrupted}
+        \begin{proof}
+            \begin{enumerate}
+                \item  $\mathcal{S}$ internally invokes $\mathcal{A}$ controlling $P_{1}$
+                \item $\mathcal{S}$ chooses $y, \alpha \in_{R} \mathbb{Z}_{q}$ and computes $g_{1}=\left(g_{0}\right)^{y}, h_{0}=\left(g_{0}\right)^{\alpha}$ and $h_{1}=\left(g_{1}\right)^{\alpha}$. (Note that $h_{1}=\left(g_{1}\right)^{\alpha}$ and not $\left(g_{1}\right)^{\alpha+1}$ )
+                \item $\mathcal{S}$ internally hands $\left(g_{1}, h_{0}, h_{1}\right)$ to $\mathcal{A}$.
+                \item When $\mathcal{A}$ sends a message intended for $f_{z k}^{R_{L}}$. If the message equals $\left(\mathbb{G}, q, g_{0}, g_{1}, h_{0}, \frac{h_{1}}{g_{1}}\right)$ then $\mathcal{S}$ internally hands $\mathcal{A}$ the bit 1 as if it came from $f_{z k}^{R_{L}} .$ If the message equals anything else, then $\mathcal{S}$ simulates $\mathcal{A}$ receiving 0 from $f_{\mathrm{zk}}^{R_{L}}$.
+                \item  $\mathcal{S}$ chooses a random value $r \in_{R} \mathbb{Z}_{q}$, computes $g=\left(g_{0}\right)^{r}$ and $h=\left(h_{0}\right)^{r}$, and internally sends $(g, h)$ to $\mathcal{A}$. (This is exactly like an honest $P_{2}$ with input $\sigma=0 .$ )
+
+            \end{enumerate}
+        \end{proof}
+    
+        
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{}
+        \begin{proof}
+            \begin{enumerate}
+                \setcounter{enumi}{5}
+                \item When $\mathcal{A}$ sends messages $\left(u_{0}, w_{0}\right),\left(u_{1}, w_{1}\right)$ then simulator $\mathcal{S}$ computes $x_{0}=w_{0} /\left(u_{0}\right)^{r}$ and $x_{1}=w_{1} /\left(u_{1}\right)^{r \cdot y^{-1} \bmod q}$. 
+                \item $\mathcal{S}$ sends $\left(x_{0}, x_{1}\right)$ to the trusted party computing $f_{\text {ot }}$. 
+                \item $\mathcal{S}$ outputs whatever $\mathcal{A}$ outputs, and halts.
+            \end{enumerate}
+        \end{proof}
+
+        DDH assumption
+        
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{$P_{2}$ is corrupted}
+    
+        \begin{proof}
+            \begin{enumerate}
+                \item  $\mathcal{S}$ internally invokes $\mathcal{A}$ controlling $P_{2}$.
+                \item $\mathcal{S}$ internally obtains $\left(g_{1}, h_{0}, h_{1}\right)$ from $\mathcal{A}$, as it intends to send to $P_{1}$.
+                \item $\mathcal{S}$ internally obtains an input tuple and $\alpha$ from $\mathcal{A}$, as it intends to send to $f_{\mathrm{zk}}^{R_{L}}$.
+                \item $\mathcal{S}$ checks that the input tuple equals $\left(\mathbb{G}, q, g_{0}, g_{1}, h_{0}, \frac{h_{1}}{g_{1}}\right)$, that $h_{0}=\left(g_{0}\right)^{\alpha}$ and $\frac{h_{1}}{g_{1}}=\left(g_{1}\right)^{\alpha}$. 
+                \item $\mathcal{S}$ internally obtains a pair $(g, h)$ from $P_{2}$. If $h=g^{\alpha}$ then $\mathcal{S}$ sets $\sigma=0$. Otherwise, it sets $\sigma=1$.
+                \item $\mathcal{S}$ externally sends $\sigma$ to the trusted party computing $f_{\text {ot }}$ and receives back $x_{\sigma} .$ 
+                \item $\mathcal{S}$ computes $\left(u_{\sigma}, v_{\sigma}\right)=R A N D\left(g_{\sigma}, g, h_{\sigma}, h\right)$ and $w_{\sigma}=v_{\sigma} \cdot x_{\sigma} .$ In addition, $\mathcal{S}$ sets $\left(u_{1-\sigma}, w_{1-\sigma}\right)$ to be independent uniformly distributed in $\mathbb{G}^{2}$.
+            \end{enumerate}
+        \end{proof}
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{}
+    
+        \begin{proof}
+            \begin{enumerate}
+                \setcounter{enumi}{7}
+                \item $\mathcal{S}$ internally hands $\left(u_{0}, w_{0}\right),\left(u_{1}, w_{1}\right)$ to $\mathcal{A}$.
+                \item $\mathcal{S}$ outputs whatever $\mathcal{A}$ outputs and halts.
+            \end{enumerate}
+        \end{proof}
+    
+    \end{frame}
+
+    \section{The Common Reference String Model – Oblivious Transfer}
+    \sectionpage
+
+    \begin{frame}
+        \frametitle{CRS model}
+        \begin{itemize}
+            \item plain model with no trusted setup
+            \item a trusted setup is used to obtain additional properties
+            \item CRS can be used to achieve non-interactive zero knowledge , which is impossible in the plain model. 
+            \item CRS is used to achieve security under composition
+            \item In the CRS model, in the real model the parties are provided the same string generated by $M$, whereas in the ideal model the simulator chooses the string. Since the real and ideal models must be indistinguishable, this means that the CRS chosen by the simulator must be indistinguishable from the CRS chosen by $M$. 
+            \item The motivation behind this definition is that if an adversary can attack the protocol in the real model, then it can also attack the protocol in the ideal model with the simulator. 
+            \item The simulator must have additional power beyond that of a legitimate party. In the CRS model, it is possible to construct a simulator that does not rewind the adversary, since its additional power is in choosing the CRS itself.
+        \end{itemize}
+    
+        
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{CRS model}
+        Two ways to define security in the CRS model:
+        \begin{itemize}
+            \item to include the CRS in the output distributions.
+            \item to define an ideal CRS functionality $f_{\mathrm{crs}}\left(1^{n}, 1^{n}\right)=\left(M\left(1^{n}\right), M\left(1^{n}\right)\right) .$ Then, one constructs a protocol and proves its security in the $f_{\text {crs }}$ -hybrid model. 
+        \end{itemize}
+    
+        Hybrid functionality $f_{\mathrm{crs}}:$ A group $\mathbb{G}$ of order $q($ of length $n)$ with generator $g_{0}$ is sampled, along with three random elements $g_{1}, h_{0}, h_{1} \in_{R} \mathbb{G}$ of the group. $f_{\mathrm{crs}}$ sends $\left(\mathbb{G}, q, g_{0}, g_{1}, h_{0}, h_{1}\right)$ to $P_{1}$ and $P_{2} .$
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{}
+        \begin{block}{OT}
+            \begin{enumerate}
+                \item $P_{2}$ chooses a random value $r \in_{R} \mathbb{Z}_{q}$, computes $g=\left(g_{\sigma}\right)^{r}$ and $h=\left(h_{\sigma}\right)^{r}$, and sends $(g, h)$ to $P_{1}$
+                \item $P_{1}$ computes $\left(u_{0}, v_{0}\right)=R A N D\left(g_{0}, g, h_{0}, h\right)$, and $\left(u_{1}, v_{1}\right)=R A N D\left(g_{1}, g, h_{1}, h\right)$.
+                $P_{1}$ sends $P_{2}$ the values $\left(u_{0}, w_{0}\right)$ where $w_{0}=v_{0} \cdot x_{0}$, and $\left(u_{1}, w_{1}\right)$ where $w_{1}=v_{1} \cdot x_{1}$
+                \item $P_{2}$ computes $x_{\sigma}=w_{\sigma} /\left(u_{\sigma}\right)^{r} .$
+                \item $P_{1}$ outputs $\lambda$ and $P_{2}$ outputs $x_{\sigma}$.
+            \end{enumerate}
+        \end{block}
+    
+        
+    
+    \end{frame}
+    \section{Advanced Topics}
+    \sectionpage
+    \subsection{Composition and Universal Composability}
+    \subsectionpage
+    \begin{frame}
+        \frametitle{Composition and Universal Composability}
+        \begin{itemize}
+            \item stand-alone model implies security under sequential composition
+            \item security under concurrent composition
+            \item adding an \textbf{environment machine} which is essentially an interactive distinguisher. The environment writes the inputs to the parties’ input tapes and reads their outputs. In addition, it externally interacts with the adversary throughout the execution. The environment’s “goal” is to distinguish between a real protocol execution and an ideal execution.
+        \end{itemize}
+        
+    
+    \end{frame}
+    \subsection{Proofs in the Random Oracle Model}
+    \subsectionpage
+    \begin{frame}
+        \frametitle{Proofs in the Random Oracle Model}
+        \begin{itemize}
+            \item Random oracle model is used to gain higher efficiency or other properties otherwise unobtainable.
+            \item Whether or not the distinguisher obtains access to the random oracle, and if yes, how.
+            \begin{itemize}
+                \item If the distinguisher does not have any access: very weak definition, sequential composition will not be guaranteed. 
+                \item If provide with the same randomly chosen oracle as the parties and the (real and ideal) adversary: obtain a \emph{non-programmable} random oracle which may not be strong enough. 
+                \item Provide the random oracle, but in the ideal world to allow the simulator to still control the oracle: a somewhat strange formulation, but something of this type seems necessary in some cases.
+            \end{itemize}
+        \end{itemize}
+    
+        
+    
+    \end{frame}
+    \subsection{Adaptive Security}
+    \subsectionpage
+    \begin{frame}
+        \frametitle{Adaptive Security}
+    
+        \begin{itemize}
+            \item \textbf{static adversaries} where the subset of corrupted parties is fixed before the protocol execution begins.
+            \item \textbf{adaptive adversary} can choose which parties to corrupt throughout the protocol, based on the messages viewed
+            \item \textbf{no erasures model}: parties cannot securely erase data
+            \item \textbf{erasures model}: parties can securely erase data
+        \end{itemize}
+    
+    \end{frame}
+
+
+
+
+    
+   
+    
+
+    \begin{frame}
+        \centerline{Thanks!}
+    
+        
+    
+    \end{frame}
+\end{document}
