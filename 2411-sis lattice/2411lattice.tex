@@ -1,0 +1,232 @@
+%%
+% Please see https://bitbucket.org/rivanvx/beamer/wiki/Home for obtaining beamer.
+%%
+\documentclass{beamer}
+\usetheme{Boadilla}
+\usecolortheme{beaver}
+\usepackage{amsmath,amscd}
+\usepackage{multicol}
+
+\title{LWE/(SIS)}
+\subtitle{and how they are related with lattice}
+\author{Kurt Pan}
+\institute{\url{ZKPunk.pro}}
+\date{\today}
+
+%\logo{\includegraphics[height=1.5cm]{zkpunk-qrcode.png}
+
+\AtBeginSection[]
+{
+  \begin{frame}
+    \frametitle{Table of Contents}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+\setbeamercolor{section number projected}{bg=red}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage 
+	\begin{columns}
+	\column{0.5\textwidth}
+	\centering
+	\includegraphics[width=3cm]{zkpunk-qrcode.png}
+    \column{0.5\textwidth}
+    \centering
+    \includegraphics[width=3cm]{lazarus-repo.png}
+ \end{columns}
+
+\end{frame}
+  
+      	
+  
+
+\begin{frame}
+\frametitle{Table of Contents}
+\tableofcontents
+\end{frame}
+
+\section{\textcolor{red}{What is LWE}}
+
+\begin{frame}
+	\frametitle{What is Learning with Errors}
+	\begin{definition}[LWE Distribution]
+		Let $\phi$ be a probability density function on $\mathbb{T}$, and $\mathbf{s} \in \mathbb{Z}_p^n$ denote the unknown secret vector. The LWE distribution $A_{\mathbf{s}, \phi}$ is the distribution over $\mathbb{Z}_p^n \times \mathbb{T}$ obtained by choosing $\mathbf{a} \in \mathbb{Z}_p^n$ uniformly at random and $e \in \mathbb{T}$ according to $\phi$, then outputting ( $\left.\mathbf{a}, \frac{1}{p}\langle\mathbf{a}, \mathbf{s}\rangle+e\right)$.
+	\end{definition}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{}
+
+	\begin{definition}[Decision-LWE]
+	 Given a polynomial number of samples either from the distribution $A_{\mathbf{s}, \phi}$ or independent and uniformly distributed samples from $\mathbb{Z}_p^n \times \mathbb{T}$, output
+	 \begin{itemize}
+	 	\item YES if the samples are from the LWE distribution $A_{\mathbf{s}, \phi}$, or
+	 	\item NO if the samples are uniformly random over $\mathbb{Z}_p^n \times \mathbb{T}$.
+	 \end{itemize}
+	\end{definition}
+	\includegraphics[scale=0.5]{lwe.png}
+\end{frame}
+
+
+
+\section{\textcolor{red}{What is Lattice}}
+
+
+\begin{frame}
+	\frametitle{What is Lattice}
+	\begin{definition}[Lattice]
+		A discrete additive subgroup of $\mathbb{R}^n$
+	\end{definition}
+	A lattice is the set of all \emph{integer} linear combinations of (linearly independent) \emph{basis} vectors $\mathbf{B}=\left\{\mathbf{b}_1, \ldots, \mathbf{b}_n\right\} \subset \mathbb{R}^n$ :
+
+$$
+\mathcal{L}=\sum_{i=1}^n \mathbf{b}_i \cdot \mathbb{Z}=\left\{\mathbf{B} \mathbf{x}: \mathbf{x} \in \mathbb{Z}^n\right\}
+$$
+
+The same lattice has many bases
+
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Shortest Vector Problem}
+	\begin{definition}[SVP$_\gamma$]
+		Given a lattice $\mathcal{L}(\mathbf{B})$, find a (nonzero) lattice vector $\mathbf{B x}$ (with $\mathbf{x} \in \mathbb{Z}^k$ ) of length (at most) $\|\mathbf{B} \mathbf{x}\| \leq \gamma \lambda_1$
+	\end{definition}
+	\includegraphics[scale=0.5]{svp.png}
+	
+	Minimum distance
+
+$$
+\begin{aligned}
+\lambda_1 & =\min _{\mathbf{x}, \mathbf{y} \in \mathcal{L}, \mathbf{x} \neq \mathbf{y}}\|\mathbf{x}-\mathbf{y}\| \\
+& =\min _{\mathbf{x} \in \mathcal{L}, \mathbf{x} \neq \mathbf{0}}\|\mathbf{x}\|
+\end{aligned}
+$$
+
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Shortest Independent Vectors Problem}
+	\begin{definition}[SIVP$_\gamma$]
+		Given a lattice $\mathcal{L}(\mathbf{B})$, find $n$ linearly independent lattice vectors $\mathbf{B x}_1, \ldots, \mathbf{B} \mathbf{x}_n$ of length (at most) $\max _i\left\|\mathbf{B} \mathbf{x}_i\right\| \leq \gamma \lambda_n$
+	\end{definition}
+	\includegraphics[scale=0.7]{sivp.png}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Closest Vector Problem}
+	\begin{definition}[CVP$_\gamma$]
+		Given a lattice $\mathcal{L}(\mathbf{B})$ and a target point $\mathbf{t}$, find a lattice vector $\mathbf{B x}$ within distance $\|\mathbf{B} \mathbf{x}-\mathbf{t}\| \leq \gamma \mu$ from the target
+		
+	\end{definition}
+	
+	\includegraphics[scale=0.7]{cvp.png}
+	
+
+\end{frame}
+
+
+
+\begin{frame}
+	\frametitle{Special Versions of CVP}
+
+	\begin{definition}
+		Given $(\mathcal{L}, \mathbf{t}, \boldsymbol{d})$, with $\mu(\mathbf{t}, \mathcal{L}) \leq \boldsymbol{d}$, find a lattice point within distance $d$ from $\boldsymbol{t}$.
+	\end{definition}
+	
+	\begin{itemize}
+		\item If $d$ is arbitrary, then one can find the closest lattice vector by binary search on $d$.
+		\item \emph{Bounded Distance Decoding (BDD)}: If $d<\lambda_1(\mathcal{L}) / 2$, then there is at most one solution. Solution is the closest lattice vector.
+		\item \emph{Absolute Distance Decoding (ADD)}: If $d \geq \mu(\mathcal{L})$, then there is always at least one solution. Solution may not be closest lattice vector.
+
+
+	\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}
+	\frametitle{Relations among lattice problems}
+	\includegraphics[scale=0.6]{latticeproblem.png}
+
+\end{frame}
+
+
+
+
+\section{\textcolor{red}{How are they related?}}
+
+\begin{frame}
+	\frametitle{Random lattices in Cryptography}
+	\begin{itemize}
+		\item Cryptography typically uses (random) lattices $\wedge$ such that
+ $\wedge \subseteq \mathbb{Z}^d$ is an integer lattice
+and $q \mathbb{Z}^d \subseteq \Lambda$ is periodic modulo a small integer $q$.
+\item Cryptographic functions based on $q$-ary lattices involve only arithmetic modulo $q$.
+	\end{itemize}
+	
+	\begin{definition}[$q$-ary lattice]
+$\Lambda$ is a $q$-ary lattice if $q \mathbb{Z}^n \subseteq \Lambda \subseteq \mathbb{Z}^n$
+	\end{definition}
+	Examples (for any $\mathbf{A} \in \mathbb{Z}_q^{n \times d}$ )
+	\begin{itemize}
+		\item $\Lambda_q(\mathbf{A})=\left\{\mathbf{x} \mid \mathbf{x} \bmod q \in \mathbf{A}^T \mathbb{Z}_q^n\right\} \subseteq \mathbb{Z}^d$
+		\item $\Lambda_q^{\perp}(\mathbf{A})=\{\mathbf{x} \mid \mathbf{A x}=\mathbf{0} \bmod q\} \subseteq \mathbb{Z}^d$
+	\end{itemize}
+	
+	$$
+\mathcal{L}_q^{\perp}\left(\left[\mathbf{A} \mid \mathbf{I}_n\right]\right)=\mathcal{L}\left(\left[\begin{array}{cc}
+-\mathbf{I}_m & \mathbf{0} \\
+\mathbf{A} & q \mathbf{I}_n
+\end{array}\right]\right)
+$$
+\end{frame}
+
+\begin{frame}
+	\frametitle{}
+	$$
+\begin{aligned}
+& \mathbf{A} \in \mathbb{Z}_q^{m \times k}, \mathbf{s} \in \mathbb{Z}_q^k, \mathbf{e} \in \mathcal{E}^m . \\
+& g_{\mathbf{A}}(\mathbf{s} ; \mathbf{e})=\mathbf{A} \mathbf{s}+\mathbf{e} \bmod q
+\end{aligned}
+$$
+	\begin{theorem} [R'05]
+The function $g_{\mathrm{A}}(\mathbf{s}, \mathbf{e})$ is hard to invert on the average, assuming SIVP is hard to approximate in the worst-case. 
+	\end{theorem}
+
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{How are they related?}
+	LWE and q-ary lattices
+	\begin{itemize}
+		\item If $\mathbf{e}=\mathbf{0}$, then $\mathbf{A s}+\mathbf{e}=\mathbf{A} \mathbf{s} \in \Lambda\left(\mathbf{A}^t\right)$
+		\item Same as CVP in random $q$-ary lattice $\Lambda\left(\mathbf{A}^t\right)$ with random target $\mathbf{t}=\mathbf{A s + e}$
+		\item Usually $\mathbf{e}$ is shorter than $\frac{1}{2} \lambda_1\left(\Lambda\left(\mathbf{A}^T\right)\right)$, and $\mathbf{e}$ is uniquely determined
+		\item TAKE AWAY: 
+		\item LWE $\equiv$ Approximate BDD (Bounded Distance Decoding)
+	\end{itemize}
+
+	
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{SIS for next time!}
+	\includegraphics[scale=0.7]{lwesis.png}
+\end{frame}
+
+
+
+\begin{frame}
+	\centering \Large{Thanks! Kob-khun kub!}
+\end{frame}
+
+\end{document}

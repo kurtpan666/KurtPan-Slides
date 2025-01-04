@@ -1,0 +1,578 @@
+%%
+% Please see https://bitbucket.org/rivanvx/beamer/wiki/Home for obtaining beamer.
+%%
+\documentclass{beamer}
+\usetheme{Boadilla}
+\usecolortheme{beaver}
+\usepackage{amsmath,amscd}
+\usepackage{multicol}
+
+\title{Circle STARK}
+\subtitle{A (kind of) brief  overview: bottom-up approach}
+\author{Kurt Pan}
+\institute{\url{ZKPunk.pro}}
+\date{\today}
+
+%\logo{\includegraphics[height=1.5cm]{zkpunk-qrcode.png}
+
+\AtBeginSection[]
+{
+  \begin{frame}
+    \frametitle{Table of Contents}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+\setbeamercolor{section number projected}{bg=red}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage 
+	\begin{columns}
+	\column{0.5\textwidth}
+	\centering
+	\includegraphics[width=3cm]{zkpunk-qrcode.png}
+    \column{0.5\textwidth}
+    \centering
+    \includegraphics[width=3.7cm]{awesomecstark.png}
+ \end{columns}
+
+\end{frame}
+  
+      	
+  
+
+\begin{frame}
+\frametitle{Table of Contents}
+
+\begin{columns}
+	\column{0.5\textwidth}
+	\tableofcontents
+    \column{0.5\textwidth}
+    \centering
+      \includegraphics[width=\linewidth]{outline}
+    
+ \end{columns}
+\end{frame}
+
+\section{\textcolor{red}{The circle group}}
+\begin{frame}
+	\includegraphics[scale=0.5]{intro1}
+\end{frame}
+
+\begin{frame}{M3/M17 Circle Group}
+Applies to M31 $p=2^{31}-1$
+    \begin{multicols}{2} % two columns
+       \includegraphics[width=6cm]{m3}
+
+        \includegraphics[width=6cm]{m17}
+    \end{multicols}
+\end{frame}
+\begin{frame}
+\includegraphics[scale=0.8]{m31reduce}
+\end{frame}
+\begin{frame}
+\frametitle{The circle curve}
+simpler construction for $p+1$ smooth
+$$
+C: x^2+y^2=1
+$$
+\includegraphics[width=6cm, height=5cm]{1}
+
+
+\end{frame}
+
+\begin{frame}
+	The $p+1$ points of $C\left(\mathbb{F}_p\right)$ 
+
+
+\begin{block}{Group Operation} 
+$$
+\left(x_0, y_0\right) \cdot\left(x_1, y_1\right):=\left(x_0 \cdot x_1-y_0 \cdot y_1, x_0 \cdot y_1+y_0 \cdot x_1\right)
+$$
+\end{block}
+The group has $(1,0)$ as its neutral element, and for any $P=\left(P_x, P_y\right)$ in $C\left(\mathbb{F}_p\right)$ we shall call
+
+$$
+T_P(x, y):=P \cdot(x, y)=\left(P_x \cdot x-P_y \cdot y, P_x \cdot y+P_y \cdot x\right)
+$$
+
+the \emph{rotation}, or \emph{translation} by $P$. 
+
+The \emph{squaring map} with respect to the group operation is the quadratic map
+
+$$
+\pi(x, y):=(x, y) \cdot(x, y)=\left(x^2-y^2, 2 \cdot x \cdot y\right)=\left(2 \cdot x^2-1,2 \cdot x \cdot y\right)
+$$
+
+\emph{Group inverses} are given by the degree-one map
+
+$$
+J(x, y):=(x,-y)
+$$
+
+
+\end{frame}
+
+
+
+
+
+
+
+\begin{frame}
+\begin{definition}[twin-coset]
+	Let $G_{n-1}$ be a (cyclic) subgroup of $C\left(\mathbb{F}_p\right)$ of size $\left|G_{n-1}\right|=2^{n-1}, n \geq 1$. 
+	
+	Any \emph{disjoint union} $D=Q \cdot G_{n-1} \cup Q^{-1} \cdot G_{n-1}$ with $Q \cdot G_{n-1} \cap Q^{-1} \cdot G_{n-1}=\varnothing$, is called a twin-coset of size $N=2^n$. 
+\end{definition}
+\begin{definition}[standard position coset]
+	A twin-coset $D$ is again a \emph{coset of the subgroup $G_n$}.
+\end{definition}
+\begin{lemma}
+	If $D$ is a twin-coset of size $N=2^n, n \geq 2$, then its image $\pi(D)$ under the squaring map $\pi$ is a twin-coset of size $N / 2$. 
+\end{lemma}
+\end{frame}
+
+\begin{frame}
+	\includegraphics[scale=0.6]{twin-coset.png}
+\end{frame}
+
+\begin{frame}
+	\begin{lemma}
+		There is an isomorphism between the circle curve $C\left(\mathbb{F}_p\right)$ and the projective line $P^1\left(\mathbb{F}_p\right)$. 
+		
+		For any finite extension $F$ of $\mathbb{F}_p$, the number of points of the circle curve over $F$ is $|F|+1$.
+	\end{lemma}
+	 
+\begin{proof}
+	The isomorphism is the stereographic projection onto the $y$-axis with center $(-1,0)$, defined by the equations
+
+$$
+t=\frac{y}{x+1}, \quad(x, y)=\left(\frac{1-t^2}{1+t^2}, \frac{2 \cdot t}{1+t^2}\right)
+$$
+
+
+Under this isomorphism $(-1,0)$ is identified with infinity of the projective line, and the two curve points $\infty=(1:+i: 0), \bar{\infty}=(1:-i: 0)$  correspond to $t= \pm i$.
+\end{proof}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{The space of polynomials and Circle Codes}
+	\begin{definition}[The space of polynomials]
+			Let $F$ be an extension field of $\mathbb{F}_p$. Over the circle curve, for any even integer $N \geq 0$ we define $\mathcal{L}_N(F)$ as the space of all bivariate polynomials with coefficients in $F$, and of total degree at most $N / 2$,
+
+$$
+\mathcal{L}_N(F)=\left\{p(x, y) \in F[x, y] /\left(x^2+y^2-1\right): \operatorname{deg} p \leq \frac{N}{2}\right\}
+$$
+	\end{definition}
+
+\begin{definition}[Circle Code]
+	The circle code with values in $F$ and evaluation domain $D$, is linear code with code words from the space
+
+$$
+\mathcal{C}_N(F, D)=\left\{\left.f(P)\right|_{P \in D}: f \in \mathcal{L}_N(F)\right\}
+$$
+
+\end{definition}
+
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Vanishing polynomials}
+	Let $D$ be a subset of $C\left(\mathbb{F}_p\right)$ of even size $N$, where $2 \leq N<p+1$. 
+	\begin{definition}[vanishing polynomial]
+		Any non-zero polynomial from $\mathcal{L}_N=\mathcal{L}_N\left(\mathbb{F}_p\right)$, which evaluates to zero over $D$ a \emph{vanishing polynomial} of the set $D$. 
+		
+		$\mathcal{V}(D)=\left\{v \in \mathcal{L}_N:\left.v\right|_D=0\right\}$
+
+	\end{definition}
+		
+	
+	Decomposing $D$ into pairs of points $\left\{P_k, Q_k\right\}, 1 \leq k \leq N / 2$, and taking the product of linear functions going through these pairs,
+
+$$
+v_D(x, y)=\prod_{k=1}^{N / 2}\left(\left(x-P_{k, x}\right) \cdot\left(Q_{k, y}-P_{k, y}\right)-\left(y-P_{k, y}\right) \cdot\left(Q_{k, x}-P_{k, x}\right)\right)
+$$
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Vanishing polynomials of FFT domains}
+	Given a twin-coset $D=Q \cdot G_{n-1} \cup Q^{-1} \cdot G_{n-1}$, where $n \geq 1$, 
+	
+	its image under the power map $\pi^{n-1}$ is a twin-coset of size two $\pi^{n-1}(D)=\left\{\left(x_D, \pm y_D\right)\right\}$. 
+	
+
+\begin{definition}[vanishing polynomial of $D$]
+	$$
+v_D(x, y):=v_n(x, y)-x_D
+$$
+
+with
+
+$$
+v_n(x, y):=\pi_x \circ \pi^{n-1}(x, y)
+$$
+
+where $\pi_x$ is the projection onto the $x$-axis
+\end{definition}
+
+
+
+\end{frame} 
+
+\begin{frame}
+Notice that whenever $D$ is a standard position coset, its image $\pi^{n-1}(D)$ is again a standard position coset and thus $x_D=0$. In this case the vanishing polynomial $v_D$ is $v_n$ itself. 
+$$
+\begin{aligned}
+& v_1(x)=x \\
+& v_2(x)=2 \cdot x^2-1 \\
+& v_3(x)=2 \cdot\left(2 \cdot x^2-1\right)^2-1=8 \cdot x^4-8 \cdot x^2+1 \\
+& v_4(x)=8 \cdot\left(2 \cdot x^2-1\right)^4-8 \cdot\left(2 \cdot x^2-1\right)^2+1\\
+&=128 \cdot x^8-256 \cdot x^6+160 \cdot x^4-32 \cdot x^2+1
+\end{aligned}
+$$
+
+\end{frame}
+
+
+
+\section{\textcolor{red}{The circle FFT}:efficient encoding \& poly arithmetic}
+
+
+\begin{frame}
+\frametitle{The sequence of domains}
+Chain of 2-to-1 maps
+
+
+$$
+\begin{CD}
+D_n @>\pi_n>> D_{n-1} @>\pi_{n-1}>> ... @>\pi_2>> D_1 @>\pi_1>> D_0       \\
+@VV{t_n}V     @VV{t_{n-1}}V         @.            @VV{t_1}V      \\
+\mathbb{F}   @.        \mathbb{F}       @.                @.        \mathbb{F}   @. 
+\end{CD}
+$$
+
+\includegraphics[scale=0.6]{chaindomain1.png}
+\end{frame}
+
+
+
+\begin{frame}
+	\frametitle{Circle FFT}
+	
+\includegraphics[scale=0.5]{chaindomain2.png}	
+	
+In the first step,
+	
+$$
+f(x, y)=f_0(x)+y \cdot f_1(x)
+$$
+
+$$
+\begin{aligned}
+f_0(x) & =\frac{f(x, y)+f(x,-y)}{2} \\
+f_1(x) & =\frac{f(x, y)-f(x,-y)}{2 \cdot y}
+\end{aligned}
+$$
+	
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{}
+	\includegraphics[scale=0.5]{chaindomain3.png}	
+
+	In the other steps, we receive a function $f_{k_0, \ldots, k_{n-j}} \in F^{S_j}$ from a previous step, where $2 \leq j \leq n$. 
+	
+$$
+f(x)=f_0(\pi(x))+x \cdot f_1(\pi(x))
+$$
+
+$$
+\begin{aligned}
+& f_0(\pi(x))=\frac{f(x)+f(-x)}{2} \\
+& f_1(\pi(x))=\frac{f(x)-f(-x)}{2 \cdot x}
+\end{aligned}
+$$
+
+$\pi(x)=2 \cdot x^2-1$. \end{frame}
+
+\begin{frame}
+	\frametitle{}
+	\begin{theorem}
+		Given $f \in F^D$ a function over $D$ with values in an extension field $F$ of $\mathbb{F}_p$, the above described algorithm outputs the coefficients $c_k \in F, 0 \leq k \leq 2^n-1$, with respect to the FFT basis, so that $\sum_{k=0}^{2^n-1} c_k \cdot b_k$ evaluates to $f$ over $D$.
+	\end{theorem}
+
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{FFT-basis}
+	\begin{definition}[FFT-basis]
+		For any integer $j$ from the interval $0 \leq j \leq 2^n-1$, let $\left(j_0, \ldots, j_{n-1}\right) \in\{0,1\}^n$ denote its bit representation, satisfying $j=j_0+j_1 \cdot 2+\ldots+j_{n-1} \cdot 2^{n-1}$. 
+		
+	The \emph{FFT-basis} of order $n$ is the family $\mathcal{B}_n$ of polynomials
+
+$$
+b_j^{(n)}(x, y):=y^{j_0} \cdot v_1(x)^{j_1} \cdot \ldots v_{n-1}^{j_{n-1}}(x), \quad 0 \leq j \leq 2^n-1
+$$
+
+where $v_k(x), 1 \leq k \leq n-1$, is the vanishing polynomial of the standard position coset of size $2^k$
+	\end{definition}
+	
+n=2:
+basis: [$1, Y, X, X*Y$]
+  
+  n=3:
+  basis: [$1, Y, X, X*Y, 2*X^2 - 1, 2*X^2*Y - Y, 2*X^3 - X, 2*X^3*Y - X*Y$]
+  
+\end{frame}
+
+\begin{frame}
+	\frametitle{CFFT in Python}
+	\includegraphics[scale=0.5]{fftcode1.png}
+\end{frame}
+
+\begin{frame}
+	\frametitle{ICFFT in Python}
+	\includegraphics[scale=0.5]{fftcode2.png}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Example}
+	Let $G=(A, B)$ be a circle generator of order 16 . The circle domain of size 8. Interpolate a set of values by a circle polynomial from $\left.\mathbb{F}_p \mid x, y\right]^{\leq 4}$
+	\includegraphics[scale=0.7]{cfft1.png}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Example}
+	\includegraphics[scale=0.5]{cfft2.png}
+	\includegraphics[scale=0.7]{cfft3.png}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Example}
+	\includegraphics[scale=0.7]{cfft4.png}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Second decomposition}
+	
+$$
+\begin{gathered}
+f_0(x)=f_{00}\left(2 x^2-1\right)+x \cdot f_{01}\left(2 x^2-1\right) \\
+f_{00}\left(2 x^2-1\right)=\frac{f_0(x)+f_0(-x)}{2} \quad f_{01}\left(2 x^2-1\right)=\frac{f_0(x)-f_0(-x)}{2 x}
+\end{gathered}
+$$
+\includegraphics[scale=0.7]{cfft5}
+\end{frame}
+
+\begin{frame}
+	\includegraphics[scale=0.7]{cfft6}
+	\includegraphics[scale=0.7]{cfft7}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Third decomposition}
+	$\begin{gathered}f_{000}\left(2 x^2-1\right)=\frac{f_{00}(x)+f_{00}(-x)}{2} \quad f_{001}\left(2 x^2-1\right)=\frac{f_{00}(x)-f_{00}(-x)}{2 x} \\ f_{000}=\frac{27}{4} \quad f_{001}=\frac{3}{4 C}\end{gathered}$
+\end{frame}
+
+\begin{frame}
+	\frametitle{Full decomposition}
+	\includegraphics[scale=0.8]{cfft8}
+\end{frame}
+
+
+
+\section{\textcolor{red}{The circle FRI}:Low-degree test}
+\begin{frame}
+\frametitle{The circle FRI}
+
+\begin{enumerate}
+	\item Commit phase:
+	\begin{itemize}
+		\item (Decomposition.) The prover compute the decomposition of $f \in \mathcal{L}_N(F)$ into $f=g+\lambda \cdot v_n$ with $g \in \mathcal{L}_N^{\prime}(F)$ and $\lambda \in F$. It sends $\lambda$ to the verifier.
+		\item (Folding.) For each $j=1, \ldots, r$,  the prover holds a function $g_{j-1} \in F^{S_{j-1}}$ from the previous round. (In the first round $g_0=g$.) It receives a random challenge $\lambda_j \leftarrow \$ F$ from the verifier, and uses it to build the random linear combination
+
+$$
+g_j=g_{j-1,0}+\lambda_j \cdot g_{j-1,1}
+$$
+
+$$
+\begin{aligned}
+& g_{j-1,0} \circ \pi_j=\frac{g_{j-1}+\left(g_{j-1} \circ T_j\right)}{2} \\
+& g_{j-1,1} \circ \pi_j=\frac{g_{j-1}-\left(g_{j-1} \circ T_j\right)}{2 \cdot t_j}
+\end{aligned}
+$$
+ The prover sets up the oracle for $g_j$, and sends it to the verifier. (In the last round, the prover sends $g_{r+1} \in \mathcal{L}^{(r)}$, in plain.)
+
+	\end{itemize}
+	\end{enumerate}
+
+
+\end{frame}
+
+\begin{frame}
+	\begin{enumerate}
+	 \setcounter{enumi}{1}
+		\item
+	 Query phase: 
+	 \begin{itemize}
+	 	\item The verifier samples $s \geq 1$ queries uniformly from $D$. For each query $Q$, we write $Q_0=Q$ and consider its trace $Q_j \in S_j, j=1 \ldots, n$, under the chain of projections $\pi_j: S_{j-1} \longrightarrow S_j$. 
+
+		\item  The verifier asks the oracle for the values of $f$ at $Q_0$ and $T_1\left(Q_0\right)$, and of $g_j$ at $Q_j$ and $T_j\left(Q_j\right)$, for $j=1, \ldots, r$. 
+		\item It takes the answers to check whether each $g_j$ was properly formed from $g_{j-1}$ via the folding , using $g_0=f-\lambda \cdot v_n$ and the equations above for $j=1, \ldots, r$.
+	 \end{itemize}
+	 	 
+	
+	 
+	 
+
+If the oracle answers satisfy these checks for each of the s queries, then the verifier accepts. (Otherwise, it rejects.)
+
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{Batch Circle FRI}
+The IOP for a batch of functions $f_1, \ldots, f_L \in F^D$ having correlated $(1-\theta)$-agreement to a codeword from $\mathcal{C}_N(F, D)$, is as follows. 
+
+In the first step, given a random challenge $\lambda_0 \leftarrow \$ F$ from the verifier, the prover computes the values of the linear combination
+
+$$
+f=\sum_{k=1}^L \lambda_0^{k-1} \cdot f_i
+$$
+
+over D. 
+
+Now, both prover and verifier run Protocol Circle FRI on $f$, with its query phase extended by a check of the new equation at each of the $s$ queries $Q$.
+	
+\end{frame}
+
+
+\section{\textcolor{red}{The circle STARK}}
+\begin{frame}
+\frametitle{Circle STARK}
+Trace domain $H$ (coset of) a subgroup of $C$
+\begin{definition}
+	The \emph{trace domain} is the standard position coset
+$$
+H \subset C\left(\mathbb{F}_p\right)
+$$
+of a cyclic and proper subgroup $G=G_n$ of the circle curve $C\left(\mathbb{F}_p\right)$, of size $N=2^n$, with $n \geq 1$, 
+
+\end{definition}
+
+The trace is organised column-wise $t_1, \ldots, t_w \in \mathbb{F}_p^N$, each placed over the domain $H$ in the usual manner, using the group translation $T$ by a generator of $G$ for the timeline. 
+
+The trace columns (witness data) are interpolated by polynomials
+
+$$
+p_1, \ldots, p_w \in \mathbb{F}_p[x, y] /\left(x^2+y^2-1\right)
+$$
+
+of total degree at most $N / 2$, meaning that $p_i \in \mathcal{L}_N\left(\mathbb{F}_p\right)$ (actually, they are from the FFT-space $\mathcal{L}_N^{\prime}\left(\mathbb{F}_p\right)$ ), 
+\end{frame}
+
+\begin{frame}
+	These polynomials are subject to a set of constraints, say
+
+$$
+P_i\left(s_i, p_1, \ldots, p_w, p_1 \circ T, \ldots, p_w \circ T\right)=0
+$$
+
+for $i=1, \ldots, C$, holding over the entire domain $H$, and where $s_i \in \mathcal{L}_N\left(\mathbb{F}_p\right)$ is a predefined \emph{selector polynomial}. 
+
+Each constraint is a polynomial
+
+$$
+P_i \in \mathbb{F}_p\left[S, X_1, \ldots, X_w, Y_1, \ldots, Y_w\right]
+$$
+
+\end{frame}
+
+\begin{frame}
+	The polynomials $p_1, \ldots, p_w$, as well as further ones provided in the course of the protocol, are committed by their values over a larger \emph{evaluation domain} $D \subseteq C\left(\mathbb{F}_p\right)$, a standard position coset of at least double the size of $H$. 
+	
+	In other words, the prover commits to code words of the circle code $\mathcal{C}_N(D)$ with values in the prime field $\mathbb{F}_p$, or some finite extension $F$ of it. Being again in standard position, $D$ is disjoint from $H$, and we assume that
+
+$$
+\frac{|D|}{|H|}=2^B
+$$
+
+for some $B \geq 1$. 
+\end{frame}
+
+\begin{frame}
+	\frametitle{Circle IOP for AIR}
+	\begin{enumerate}
+		\setcounter{enumi}{-1}
+		\item The prover sets up the domain evaluation oracles $\left[p_1\right], \ldots,\left[p_w\right]$ for the values of $p_1(X, Y), \ldots, p_w(X, Y)$ over $D$, and sends them to the verifier.
+		\item Upon receiving a randomness $\beta \leftarrow \$ F$ from the verifier, the prover computes the domain quotient $q_\beta(X, Y) \in F[X, Y]$ of degree $\leq(d-1) \cdot|H| / 2$ satisfying the identity
+
+$$
+\sum_{i=1}^C \beta^{i-1} \cdot P_i\left(s_i, p_1, \ldots, p_w,\left(p_1 \circ T\right), \ldots,\left(p_w \circ T\right)\right)=q_\beta \cdot v_H
+$$
+
+and decomposes it into segment polynomials $q_{\beta, j}(X, Y) \in F[X, Y], j=1, \ldots, d-1$, each of degree $\leq|H| / 2$, and the dimension-gap scalar $\lambda \in F$, with respect to a union of twin-cosets $\bar{H}=\bigcup_{j=1}^{d-1} H_j$ having overall size $(d-1) \cdot|H|$.  It sends the oracles
+
+	\end{enumerate}
+
+
+\end{frame}
+\begin{frame}
+	\frametitle{}
+	$$
+\left[q_{\beta, 1}\right], \ldots,\left[q_{\beta, d-1}\right]
+$$
+
+for their values over $D$, and $\lambda$ to the verifier. The overall identity to be proven is therefore
+
+$$
+\begin{aligned}
+	&\sum_{i=1}^C \beta^{i-1} \cdot P_i\left(s_i, p_1, \ldots, p_w,\left(p_1 \circ T\right), \ldots,\left(p_w \circ T\right)\right)\\
+&=v_H \cdot\left(\lambda \cdot v_{\bar{H}}+\sum_{j=1}^{d-1} \frac{v_{\bar{H}}}{v_{H_j}} \cdot q_{\beta, j}\right)
+\end{aligned}
+$$
+
+\begin{enumerate}
+	\setcounter{enumi}{1}
+	\item The verifier samples a random DEEP query, i.e. a random point $\gamma \longleftarrow C(F) \backslash(D \cup H)$ drawn uniformly from the circle curve over the extension field $F$, and sends it to the prover. 
+
+	The prover answers with the evaluation claims $\left(\gamma, v_{i, 1}\right),\left(T(\gamma), v_{i, 2}\right), i=1, \ldots, w$, for the witness polynomials $p_i(X, Y)$, and $\left(\gamma, v_j\right)$, $j=1, \ldots, d-1$, for the segment polynomials $q_{\beta, j}(X, Y)$
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{}
+	\begin{enumerate}
+	\setcounter{enumi}{2}
+		\item Both prover and verifier engage in the batch circle FRI  for the real and imaginary parts of the DEEP quotients,
+
+$$
+\operatorname{Re} / \operatorname{lm}\left(\frac{p_i-v_{i, 0}}{v_\gamma}\right), \operatorname{Re} / \operatorname{lm}\left(\frac{p_i-v_{i, 1}}{v_{T(\gamma)}}\right)
+$$
+
+for each $i=1, \ldots, w$, and
+
+$$
+\operatorname{Re} / \operatorname{lm}\left(\frac{q_{\beta, 1}-v_1}{v_\gamma}\right), \ldots, \operatorname{Re} / \operatorname{Im}\left(\frac{q_{\beta, d-1}-v_{d-1}}{v_\gamma}\right)
+$$
+
+which is a joint proximity test to the circle code $\mathcal{C}_N(F, D)$, where $N=|H| . \quad$ 	\end{enumerate}
+If circle FRI passes, and if the evaluation claims satisfy the overall identity at $(X, Y)=\gamma$, the verifier accepts. (Otherwise, it rejects.)
+\end{frame}
+
+\begin{frame}
+	\centering \Large{Thanks! Kob-khun kub!}
+\end{frame}
+
+\end{document}
